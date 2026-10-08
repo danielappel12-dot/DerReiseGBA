@@ -12,6 +12,8 @@ typedef struct {
     u16 total;           /* enemies in this wave */
     u16 spawn_timer;
     u8  banner;          /* 0 none, 1 WAVE n, 2 READY?, 3 CLEARED */
+    u16 since_kill;      /* frames since the last kill (straggler failsafe) */
+    u32 last_kills;
 } Rounds;
 
 extern Rounds rounds;

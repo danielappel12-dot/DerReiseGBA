@@ -3,6 +3,7 @@
 #
 #   make            release build  -> nightfall.gba
 #   make DEBUG=1    debug build    -> nightfall_debug.gba (debug overlay + cheats)
+#   make BOT=1      self-playing stress-test build -> nightfall_bot.gba
 #   make assets     regenerate pixel art / map / audio tables (needs python3 + Pillow)
 #   make run        launch the ROM in mGBA
 #   make clean
@@ -18,7 +19,11 @@ SIZE     = $(PREFIX)size
 PYTHON  ?= python3
 EMU     ?= mgba
 
-ifeq ($(DEBUG),1)
+ifeq ($(BOT),1)
+TARGET  := nightfall_bot
+DEFS    := -DDEBUG=1 -DBOT=1 $(if $(BOTWAVE),-DBOT_WAVE=$(BOTWAVE)) $(if $(BOTENEMY),-DBOT_ENEMY=$(BOTENEMY))
+OPT     := -O2
+else ifeq ($(DEBUG),1)
 TARGET  := nightfall_debug
 DEFS    := -DDEBUG=1
 OPT     := -O2 -g
@@ -28,7 +33,7 @@ DEFS    :=
 OPT     := -O2
 endif
 
-BUILD    := build
+BUILD    := build/$(TARGET)
 SRC_DIRS := src data
 INCLUDES := -Iinclude -Idata
 
@@ -78,6 +83,6 @@ run: $(TARGET).gba
 	$(EMU) $(TARGET).gba
 
 clean:
-	rm -rf $(BUILD) nightfall.gba nightfall_debug.gba
+	rm -rf $(BUILD) nightfall.gba nightfall_debug.gba nightfall_bot.gba
 
 -include $(DEPS)

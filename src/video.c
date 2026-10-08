@@ -189,7 +189,7 @@ void Video_VSync(void)
 /* ------------------------------------------------------------------ sprites */
 void Spr_Begin(void) { oam_count = 0; }
 
-void Spr_Add(int x, int y, int size, int tile, int pal, int prio, int flip)
+IWRAM_CODE void Spr_Add(int x, int y, int size, int tile, int pal, int prio, int flip)
 {
     static const u8 w_tab[12] = { 8, 16, 32, 64, 16, 32, 32, 64, 8, 8, 16, 32 };
     static const u8 h_tab[12] = { 8, 16, 32, 64, 8, 8, 16, 32, 16, 32, 32, 64 };

@@ -361,7 +361,7 @@ def spitter(view, frame):
         c.px(hx + hw - 2, hy + 3, C(bk, 8))
         c.rect(hx + hw - 3, hy + 5, 3, 3 if atk else 1, C(bk, 9) if atk else C(bk, 1))
 
-    P = dict(hunch=1, stride=2, torso_w=10, head_w=8, top=1, arm_len=6, torso_decor=torso_decor,
+    P = dict(hunch=1, stride=2, torso_w=12, head_w=6, top=2, arm_len=6, leg_w=3, torso_decor=torso_decor,
              back_decor=back_decor, head_decor=head_decor, head_back=head_back, head_side=head_side,
              side_decor=lambda c, x, y, w, bk: (c.ellipse(x + w - 1, y + 3.5, 3.4, 3.2, C(bk, 9)),
                                                  c.ellipse(x + w - 1, y + 3.5, 2.2, 2.0, C(bk, 8))))
@@ -411,14 +411,13 @@ def zombie_corpse(bank, frame, base_w=14):
     c = Canvas(16, 16)
     skin, skins = C(b, 2), C(b, 3)
     ca, cb = C(b, 4), C(b, 6)
-    bl = C(4, 6) if False else C(1, 9)
+    bl = C(1, 9)
     if frame == 0:
         c.rect(3, 4, 9, 7, ca); c.rect(9, 2, 6, 5, skin); c.rect(2, 10, 8, 4, cb); c.rect(11, 9, 4, 3, cb)
         c.px(12, 4, C(b, 8)); c.px(10, 6, skins)
         c.rect(0, 6, 3, 2, skin)
     else:
         c.rect(1, 6, 10, 6, ca); c.vline(1, 6, 6, skins); c.hline(1, 11, 10, C(b, 5))
-        c.rect(0, 7, 5, 4, skin) if False else None
         c.rect(11, 6, 5, 5, skin); c.vline(15, 6, 5, skins); c.px(13, 8, C(b, 1)); c.px(14, 8, C(b, 1))
         c.rect(3, 12, 8, 2, cb); c.rect(10, 12, 4, 2, C(b, 13))
         c.rect(2, 3, 4, 3, skin)

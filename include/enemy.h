@@ -51,5 +51,6 @@ void Enemies_KillAll(int award);
 int  Enemies_NearestTo(int px, int py, int max_dist, int need_los, int skip);
 void Enemies_Clearout(int dmg);
 int  Enemy_CenterY(const Enemy *e);
+int  Enemy_TeleportNearPlayer(Enemy *e, int rmin, int rmax);
 
 #endif

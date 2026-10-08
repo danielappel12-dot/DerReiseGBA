@@ -1,5 +1,6 @@
 /* game.c - state manager, world update, run lifecycle */
 #include "game.h"
+#include "prof.h"
 
 Game G;
 
@@ -74,20 +75,43 @@ static void debug_cheats(void)
     if (KeyPressed(KEY_RIGHT)) { G.score += 1000; sel_combo = 1; }
     if (KeyPressed(KEY_A))     { Enemies_KillAll(0); rounds.to_spawn = 0; Rounds_StartWave(rounds.wave + 1); sel_combo = 1; }
     if (KeyPressed(KEY_B))     { G.god ^= 1; sel_combo = 1; }
-    if (KeyPressed(KEY_L))     { G.debug ^= 1; sel_combo = 1; }
-    if (KeyPressed(KEY_R))     { Map_RevealAll(); Map_SetPower(1); sel_combo = 1; }
+    if (KeyHeld(KEY_L) && KeyHeld(KEY_R) && (keys_down & (KEY_L | KEY_R))) { G.god = 0; player.inv_t = 0; Player_Hurt(999, player.x >> 8, player.y >> 8); sel_combo = 1; }
+    else if (KeyPressed(KEY_L)) { G.debug ^= 1; sel_combo = 1; }
+    else if (KeyPressed(KEY_R)) { Map_RevealAll(); Map_SetPower(1); sel_combo = 1; }
+    if (KeyPressed(KEY_START)) {       /* teleport to the next interaction zone */
+        static int tp;
+        const Interact *z = &map_interacts[tp++ % NUM_INTERACTS];
+        int found = 0;
+        for (int ty = z->y >> 3; ty <= (z->y + z->h) >> 3 && !found; ty++)
+            for (int tx = z->x >> 3; tx <= (z->x + z->w) >> 3 && !found; tx++) {
+                int px = tx * 8 + 4, py = ty * 8 + 7;
+                if (px < z->x || px >= z->x + z->w || py < z->y || py >= z->y + z->h) continue;
+                if (Col_BoxSolid(px, py, PLAYER_HW, PLAYER_HU)) continue;
+                player.x = (s32)px << 8; player.y = (s32)py << 8;
+                found = 1;
+            }
+        sel_combo = 1;
+    }
 #endif
 }
 
 void World_Update(int running)
 {
+    PROF_BEGIN(PF_PLAYER);
     Fx_Update();
     Player_Update();
+    PROF_END(PF_PLAYER);
+    PROF_BEGIN(PF_ENEMY);
     Enemies_Update();
+    PROF_END(PF_ENEMY);
+    PROF_BEGIN(PF_BULLET);
     Bullets_Update();
     Pickups_Update();
+    PROF_END(PF_BULLET);
     int ptx = player.x >> 11, pty = player.y >> 11;
-    Nav_Update(ptx, pty, 460);
+    PROF_BEGIN(PF_NAV);
+    Nav_Update(ptx, pty, 170);
+    PROF_END(PF_NAV);
     if (ptx != last_ptx || pty != last_pty) {
         last_ptx = ptx; last_pty = pty;
         Map_Reveal(ptx, pty, 6);
@@ -106,6 +130,7 @@ void World_Update(int running)
 
 static void render_play(void)
 {
+    PROF_BEGIN(PF_RENDER);
     Cam_Update(player.x >> 8, player.y >> 8, (Cos(player.face_angle) * 18) >> 8, (Sin(player.face_angle) * 12) >> 8);
     World_Render();
     banner_text = 0;
@@ -124,6 +149,7 @@ static void render_play(void)
         Hud_TextC(8, map_area_names[cur_area], (area_t & 8) && area_t < 30 ? HC_GRAY : HC_ORANGE);
     }
     if (G.debug) Hud_Debug();
+    PROF_END(PF_RENDER);
 }
 
 static void update_play(void)
@@ -136,8 +162,23 @@ static void update_play(void)
         sel_down = 0;
         if (!sel_combo) { Game_SetState(ST_STATUS); return; }
     }
-    if (KeyPressed(KEY_START) && player.state == PS_ALIVE) { Game_SetState(ST_PAUSED); return; }
+    if (KeyPressed(KEY_START) && !KeyHeld(KEY_SELECT) && player.state == PS_ALIVE) { Game_SetState(ST_PAUSED); return; }
 
+#ifdef BOT
+    G.god = 1;
+    if ((G.frame % 300) == 0) Weapon_FillAmmo(&player);
+#ifdef BOT_WAVE
+    static u8 bot_once;
+    if (!bot_once && G.state_frame > 2) { bot_once = 1; Rounds_StartWave(BOT_WAVE); Map_RevealAll(); Map_SetPower(1); for (int d = 0; d < NUM_DOORS; d++) Map_OpenDoor(d); }
+    if (0) {
+#else
+    if ((G.frame % 540) == 0) {      /* leap ahead to stress the late waves */
+#endif
+        Enemies_KillAll(0);
+        Rounds_StartWave(rounds.wave + 1);
+        if (rounds.wave == 6) { Map_RevealAll(); Map_SetPower(1); for (int d = 0; d < NUM_DOORS; d++) Map_OpenDoor(d); }
+    }
+#endif
     int running = (rounds.phase != RP_START);
     World_Update(running);
     if (player.state == PS_ALIVE) Rounds_Update();
@@ -170,9 +211,13 @@ void Game_Init(void)
 {
     memset(&G, 0, sizeof(G));
     G.show_map = save.minimap_on;
+#ifdef BOT
+    G.debug = 1;
+#endif
     Audio_Enable(save.music_on, save.sfx_on);
     Rounds_Reset();
     Player_Init();
+    Audio_SetMusic(MUS_MENU);
     G.state = ST_TITLE;
     if (!save.seen_controls) {
         Game_SetState(ST_CONTROLS);
@@ -183,6 +228,7 @@ void Game_Init(void)
 
 void Game_Frame(void)
 {
+    PROF_BEGIN(PF_TOTAL);
     Input_Update();
     G.frame++;
     G.state_frame++;
@@ -196,4 +242,8 @@ void Game_Frame(void)
         break;
     }
     Audio_Update();
+    PROF_END(PF_TOTAL);
+#ifdef DEBUG
+    Prof_Frame();
+#endif
 }

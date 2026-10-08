@@ -70,19 +70,19 @@ void Video_PalCycle(u32 frame, int powered);
 
 /* sprites */
 void Spr_Begin(void);
-void Spr_Add(int x, int y, int size, int tile, int pal, int prio, int flip);
+void Spr_Add(int x, int y, int size, int tile, int pal, int prio, int flip) __attribute__((long_call));
 int  Spr_Count(void);
 
 /* HUD / text layer (BG0) */
 void Hud_Clear(void);
-void Hud_Text(int x, int y, const char *s, int pal);
+void Hud_Text(int x, int y, const char *s, int pal) __attribute__((long_call));
 void Hud_TextC(int y, const char *s, int pal);          /* centred */
-void Hud_Num(int x, int y, u32 v, int width, int pal, char pad);
+void Hud_Num(int x, int y, u32 v, int width, int pal, char pad) __attribute__((long_call));
 void Hud_Big(int x, int y, const char *s, int pal);     /* 16x16 glyphs, x/y in tiles */
 void Hud_BigC(int y, const char *s, int pal);
 void Hud_Bar(int x, int y, int tiles, int value, int maxv, int pal);
 void Hud_Box(int x, int y, int w, int h);
-void Hud_Tile(int x, int y, int tile, int pal);
+void Hud_Tile(int x, int y, int tile, int pal) __attribute__((long_call));
 
 /* minimap pixel buffer */
 void Mini_Clear(void);

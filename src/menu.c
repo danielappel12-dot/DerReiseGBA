@@ -19,8 +19,8 @@ static void finish_run(void)
     /* record the finished run: best wave / score / kills / time */
     int wave = rounds.wave;
     G.new_best = 0;
-    if (G.score > save.best_score) { save.best_score = G.score; G.new_best = 1; }
-    if ((u32)wave > save.best_wave) { save.best_wave = (u16)wave; G.new_best = 1; }
+    if (G.score > save.best_score) { save.best_score = G.score; G.new_best = G.score > 0; }
+    if ((u32)wave > save.best_wave) { save.best_wave = (u16)wave; if (G.score > 0) G.new_best = 1; }
     if (G.kills > save.best_kills) save.best_kills = G.kills;
     if (G.play_frames > save.best_time) save.best_time = G.play_frames;
     save.total_kills += G.kills;
@@ -183,18 +183,19 @@ void Menu_Update(void)
 static void draw_controls(void)
 {
     Hud_BigC(0, "CONTROLS", HC_ORANGE);
+    Hud_Box(0, 2, 30, 18);
     static const char *const k[][2] = {
         { "D-PAD", "MOVE" }, { "A", "FIRE (HOLD)" }, { "B", "RELOAD / MELEE" }, { "B HOLD", "BUY / USE / OPEN" },
         { "L", "SWITCH WEAPON" }, { "R", "CYCLE TARGET" }, { "START", "PAUSE" }, { "SELECT", "STATUS + MAP" },
     };
     for (int i = 0; i < 8; i++) {
-        Hud_Text(2, 3 + i, k[i][0], HC_YELLOW);
-        Hud_Text(11, 3 + i, k[i][1], HC_WHITE);
+        Hud_Text(3, 4 + i, k[i][0], HC_YELLOW);
+        Hud_Text(12, 4 + i, k[i][1], HC_WHITE);
     }
-    Hud_TextC(12, "AUTO-AIM LOCKS THE NEAREST", HC_GRAY);
-    Hud_TextC(13, "ZOMBIE IN SIGHT. MOVE FREELY.", HC_GRAY);
-    Hud_TextC(14, "KILL FOR POINTS. OPEN DOORS.", HC_GRAY);
-    Hud_TextC(15, "FIND THE GENERATOR.", HC_GRAY);
+    Hud_TextC(13, "AUTO-AIM LOCKS THE NEAREST", HC_CYAN);
+    Hud_TextC(14, "ZOMBIE IN SIGHT. MOVE FREELY.", HC_CYAN);
+    Hud_TextC(15, "KILL FOR POINTS. OPEN DOORS.", HC_GRAY);
+    Hud_TextC(16, "FIND THE GENERATOR.", HC_GRAY);
     if ((G.frame >> 4) & 1) Hud_TextC(18, "PRESS A", HC_WHITE);
 }
 
@@ -225,19 +226,20 @@ void Menu_Draw(void)
     case ST_HIGH_SCORE:
         Spr_Begin();
         Hud_BigC(1, "HIGH SCORES", HC_ORANGE);
-        Hud_Text(4, 6, "HIGHEST WAVE", HC_GRAY);   Hud_Num(21, 6, save.best_wave, 4, HC_WHITE, ' ');
-        Hud_Text(4, 8, "HIGHEST SCORE", HC_GRAY);  Hud_Num(19, 8, save.best_score, 6, HC_YELLOW, ' ');
-        Hud_Text(4, 10, "MOST KILLS", HC_GRAY);    Hud_Num(21, 10, save.best_kills, 4, HC_WHITE, ' ');
-        Hud_Text(4, 12, "LONGEST SURVIVAL", HC_GRAY); time_str(b, save.best_time); Hud_Text(21, 12, b, HC_WHITE);
-        Hud_Text(4, 14, "TOTAL KILLS", HC_GRAY);   Hud_Num(19, 14, save.total_kills, 6, HC_GREEN, ' ');
-        Hud_Text(4, 16, "GAMES PLAYED", HC_GRAY);  Hud_Num(21, 16, save.games_played, 4, HC_WHITE, ' ');
+        Hud_Box(1, 4, 28, 14);
+        Hud_Text(3, 6, "HIGHEST WAVE", HC_WHITE);   Hud_Num(21, 6, save.best_wave, 6, HC_ORANGE, ' ');
+        Hud_Text(3, 8, "HIGHEST SCORE", HC_WHITE);  Hud_Num(21, 8, save.best_score, 6, HC_YELLOW, ' ');
+        Hud_Text(3, 10, "MOST KILLS", HC_WHITE);    Hud_Num(21, 10, save.best_kills, 6, HC_WHITE, ' ');
+        Hud_Text(3, 12, "LONGEST SURVIVAL", HC_WHITE); time_str(b, save.best_time); Hud_Text(22, 12, b, HC_CYAN);
+        Hud_Text(3, 14, "TOTAL KILLS", HC_GRAY);   Hud_Num(21, 14, save.total_kills, 6, HC_GREEN, ' ');
+        Hud_Text(3, 16, "GAMES PLAYED", HC_GRAY);  Hud_Num(21, 16, save.games_played, 6, HC_GRAY, ' ');
         Hud_TextC(19, "PRESS A", HC_GRAY);
         break;
     case ST_OPTIONS: {
         Spr_Begin();
         Hud_BigC(1, "OPTIONS", HC_ORANGE);
         static const char *const aim[3] = { "SHORT", "MEDIUM", "LONG" };
-        Hud_Box(2, 5, 26, 13);
+        Hud_Box(2, 5, 26, 14);
         int y = 7;
         Hud_Text(5, y, "MUSIC", HC_WHITE);       Hud_Text(19, y, save.music_on ? "ON" : "OFF", save.music_on ? HC_GREEN : HC_RED);
         Hud_Text(5, y + 2, "SOUND FX", HC_WHITE); Hud_Text(19, y + 2, save.sfx_on ? "ON" : "OFF", save.sfx_on ? HC_GREEN : HC_RED);
@@ -281,10 +283,10 @@ void Menu_Draw(void)
     }
     case ST_GAME_OVER: {
         Hud_BigC(2, "SYSTEM FAILURE", HC_RED);
-        Hud_Text(9, 7, "WAVE", HC_GRAY);   Hud_Num(14, 7, rounds.wave, 2, HC_ORANGE, '0');
-        Hud_Text(9, 8, "SCORE", HC_GRAY);  Hud_Num(14, 8, G.score, 6, HC_YELLOW, '0');
-        Hud_Text(9, 9, "KILLS", HC_GRAY);  Hud_Num(14, 9, G.kills, 3, HC_WHITE, ' ');
-        Hud_Text(9, 10, "TIME", HC_GRAY);  time_str(b, G.play_frames); Hud_Text(14, 10, b, HC_WHITE);
+        Hud_Text(8, 7, "WAVE", HC_GRAY);   Hud_Num(15, 7, rounds.wave, 2, HC_ORANGE, '0');
+        Hud_Text(8, 8, "SCORE", HC_GRAY);  Hud_Num(15, 8, G.score, 6, HC_YELLOW, '0');
+        Hud_Text(8, 9, "KILLS", HC_GRAY);  Hud_Num(15, 9, G.kills, 3, HC_WHITE, '0');
+        Hud_Text(8, 10, "TIME", HC_GRAY);  time_str(b, G.play_frames); Hud_Text(15, 10, b, HC_WHITE);
         if (G.new_best && ((G.frame >> 3) & 1)) Hud_TextC(12, "NEW BEST!", HC_GREEN);
         list_item(14, "TRY AGAIN", 0, HC_YELLOW, HC_WHITE);
         list_item(16, "MAIN MENU", 1, HC_YELLOW, HC_WHITE);

@@ -191,26 +191,30 @@ static void steer(Enemy *e, int slot)
     (void)d;
 }
 
-static void stalker_teleport(Enemy *e)
+/* put an enemy on a random free tile rmin..rmax pixels from the player (stalkers, failsafe) */
+int Enemy_TeleportNearPlayer(Enemy *e, int rmin, int rmax)
 {
-    const EnemyDef *d = &enemy_defs[E_STALKER];
+    const EnemyDef *d = &enemy_defs[e->type];
     int px = player.x >> 8, py = player.y >> 8;
-    for (int t = 0; t < 14; t++) {
+    for (int t = 0; t < 16; t++) {
         int ang = RandRange(256);
-        int r = 44 + RandRange(40);
+        int r = rmin + RandRange(rmax - rmin + 1);
         int nx = px + ((Cos((u8)ang) * r) >> 8);
         int ny = py + ((Sin((u8)ang) * r) >> 8);
         if ((u32)nx >= 512 || (u32)ny >= 512) continue;
         if (!footprint_free(nx, ny, d)) continue;
-        {
-            int ar = map_area[(ny >> 3) * MAP_W + (nx >> 3)];
-            if (ar >= NUM_AREAS || !Map_AreaOpen(ar)) continue;
-        }
+        int ar = map_area[(ny >> 3) * MAP_W + (nx >> 3)];
+        if (ar >= NUM_AREAS || !Map_AreaOpen(ar)) continue;
         e->x = (s32)nx << 8; e->y = (s32)ny << 8;
+        e->px = (u16)nx; e->py = (u16)ny;
+        e->stuck = 0; e->alt = 0;
         Fx_Sparks(nx, ny - 8, 4);
-        return;
+        return 1;
     }
+    return 0;
 }
+
+static void stalker_teleport(Enemy *e) { Enemy_TeleportNearPlayer(e, 44, 84); }
 
 IWRAM_CODE static void update_one(Enemy *e, int idx)
 {
@@ -332,7 +336,7 @@ void Enemies_Update(void)
     enemy_count_alive = (u8)alive;
 
     /* soft separation so zombies do not stack on the same pixel */
-    for (int i = 0; i < MAX_ENEMIES; i++) {
+    for (int i = (int)(G.frame & 1); i < MAX_ENEMIES; i += 2) {      /* half of the pairs per frame */
         Enemy *a = &enemies[i];
         if (!a->active || a->state == ES_DEAD || a->state == ES_IDLE) continue;
         int ax = a->x >> 8, ay = a->y >> 8;
@@ -343,7 +347,7 @@ void Enemies_Update(void)
             int rx = 9, ry = 6;
             if (a->type == E_BRUTE || b->type == E_BRUTE) { rx = 14; ry = 9; }
             if (dx >= rx || dx <= -rx || dy >= ry || dy <= -ry) continue;
-            int sx = dx > 0 ? 60 : -60, sy = dy > 0 ? 40 : -40;
+            int sx = dx > 0 ? 110 : -110, sy = dy > 0 ? 70 : -70;
             if (dx == 0) sx = (i & 1) ? 60 : -60;
             if (a->type != E_BRUTE) Col_Move(&a->x, &a->y, -sx, -sy, enemy_defs[a->type].hw, enemy_defs[a->type].hu);
             if (b->type != E_BRUTE) Col_Move(&b->x, &b->y, sx, sy, enemy_defs[b->type].hw, enemy_defs[b->type].hu);

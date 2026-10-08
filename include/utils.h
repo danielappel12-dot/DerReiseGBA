@@ -28,7 +28,7 @@ s32  RandRange(s32 n);              /* 0 .. n-1 */
 s32  RandSigned(s32 n);             /* -n .. +n */
 
 /* string helpers (HUD) */
-int  UInt2Str(char *buf, u32 v, int width, char pad);   /* returns chars written */
+int  UInt2Str(char *buf, u32 v, int width, char pad) __attribute__((long_call));   /* returns chars written */
 
 /* memory */
 void *memcpy(void *dst, const void *src, size_t n);

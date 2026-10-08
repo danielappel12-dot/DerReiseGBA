@@ -1,4 +1,5 @@
 #include "game.h"
+#include "prof.h"
 
 /* ------------------------------------------------------------------ HUD layer */
 void Hud_Clear(void)
@@ -6,13 +7,13 @@ void Hud_Clear(void)
     memset32(hud_map, 0, 512);
 }
 
-void Hud_Tile(int x, int y, int tile, int pal)
+IWRAM_CODE void Hud_Tile(int x, int y, int tile, int pal)
 {
     if (x < 0 || x >= 32 || y < 0 || y >= 32) return;
     hud_map[y * 32 + x] = (u16)(tile | (pal << 12));
 }
 
-void Hud_Text(int x, int y, const char *s, int pal)
+IWRAM_CODE void Hud_Text(int x, int y, const char *s, int pal)
 {
     for (; *s; s++, x++) {
         int c = (u8)*s;
@@ -28,7 +29,7 @@ void Hud_TextC(int y, const char *s, int pal)
     Hud_Text((30 - n) / 2, y, s, pal);
 }
 
-void Hud_Num(int x, int y, u32 v, int width, int pal, char pad)
+IWRAM_CODE void Hud_Num(int x, int y, u32 v, int width, int pal, char pad)
 {
     char buf[14];
     UInt2Str(buf, v, width, pad);
@@ -190,9 +191,9 @@ void Hud_Game(void)
         Hud_Bar(21 + 6 > 28 ? 21 : 27, 17, 3, total - p->reload_t, total, HC_YELLOW);
     }
     if (p->wpn[p->cur ^ 1].id != 255) {
-        Hud_Text(22, 17, "L:", HC_GRAY);
         const char *nm = weapon_defs[p->wpn[p->cur ^ 1].id].name;
-        if (!p->reload_t) Hud_Text(24, 17, nm, HC_GRAY);
+        int nl = strlen_(nm);
+        if (!p->reload_t) { Hud_Text(30 - nl - 2, 17, "L:", HC_GRAY); Hud_Text(30 - nl, 17, nm, HC_GRAY); }
     }
 
     /* ---- power-up timers (top centre) */
@@ -222,21 +223,31 @@ void Hud_Game(void)
     hud_banner_text = 0;
 }
 
+#ifdef DEBUG
 void Hud_Debug(void)
 {
     extern u8 __bss_end;
     char b[8];
-    Hud_Text(0, 3, "FPS", HC_CYAN);  Hud_Num(4, 3, G.fps, 2, HC_WHITE, ' ');
-    Hud_Text(8, 3, "X", HC_CYAN);    Hud_Num(9, 3, player.x >> 8, 3, HC_WHITE, ' ');
-    Hud_Text(13, 3, "Y", HC_CYAN);   Hud_Num(14, 3, player.y >> 8, 3, HC_WHITE, ' ');
+    Hud_Text(0, 3, "FPS", HC_CYAN);  Hud_Num(4, 3, G.fps, 2, HC_WHITE, ' '); Hud_Text(6, 3, "LOW", HC_CYAN); Hud_Num(10, 3, G.fps_low, 2, HC_WHITE, ' ');
+    Hud_Text(14, 3, "X", HC_CYAN);   Hud_Num(15, 3, player.x >> 8, 3, HC_WHITE, ' ');
+    Hud_Text(19, 3, "Y", HC_CYAN);   Hud_Num(20, 3, player.y >> 8, 3, HC_WHITE, ' ');
     Hud_Text(0, 4, "EN", HC_CYAN);   Hud_Num(3, 4, enemy_count_alive, 2, HC_WHITE, ' ');
     Hud_Text(7, 4, "BL", HC_CYAN);   Hud_Num(10, 4, Bullets_Count(), 2, HC_WHITE, ' ');
     Hud_Text(14, 4, "W", HC_CYAN);   Hud_Num(15, 4, rounds.wave, 2, HC_WHITE, ' ');
     Hud_Text(0, 5, "HP", HC_CYAN);   Hud_Num(3, 5, player.hp, 3, HC_WHITE, ' ');
-    Hud_Text(8, 5, "PTS", HC_CYAN);  Hud_Num(12, 5, G.score, 6, HC_WHITE, ' ');
+    Hud_Text(8, 5, "PT", HC_CYAN);  Hud_Num(10, 5, G.score, 4, HC_WHITE, ' ');
     Hud_Text(0, 6, "GOD", HC_CYAN);  Hud_Text(4, 6, G.god ? "ON" : "OFF", HC_WHITE);
+    Hud_Text(14, 5, weapon_defs[player.wpn[player.cur].id].name, HC_YELLOW);
     u32 free_iw = 0x03007800u - (u32)&__bss_end;
     Hud_Text(9, 6, "IWRAM FREE", HC_CYAN); UInt2Str(b, free_iw, 1, '0'); Hud_Text(20, 6, b, HC_WHITE);
-    Hud_Text(0, 7, "SEL+UP KILL  DN HEAL  LT GUN", HC_GRAY);
-    Hud_Text(0, 8, "SEL+RT PTS  A WAVE  B GOD", HC_GRAY);
+    Hud_Text(0, 7, "PL", HC_CYAN);  Hud_Num(3, 7, prof_shown[PF_PLAYER] / 1000, 3, HC_WHITE, ' ');
+    Hud_Text(7, 7, "EN", HC_CYAN);  Hud_Num(10, 7, prof_shown[PF_ENEMY] / 1000, 3, HC_WHITE, ' ');
+    Hud_Text(14, 7, "BU", HC_CYAN); Hud_Num(17, 7, prof_shown[PF_BULLET] / 1000, 3, HC_WHITE, ' ');
+    Hud_Text(0, 8, "NV", HC_CYAN);  Hud_Num(3, 8, prof_shown[PF_NAV] / 1000, 3, HC_WHITE, ' ');
+    Hud_Text(7, 8, "RD", HC_CYAN);  Hud_Num(10, 8, prof_shown[PF_RENDER] / 1000, 3, HC_WHITE, ' ');
+    Hud_Text(0, 9, "TOT", HC_CYAN); Hud_Num(4, 9, prof_shown[PF_TOTAL] / 1000, 3, HC_WHITE, ' ');
+    Hud_Text(8, 9, "KC MAX/2S OF 280", HC_GRAY);
 }
+#else
+void Hud_Debug(void) {}
+#endif

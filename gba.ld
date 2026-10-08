@@ -15,7 +15,7 @@ SECTIONS
     .text : ALIGN(4)
     {
         KEEP(*(.crt0))
-        *(.text .text.*)
+        *(EXCLUDE_FILE(*enemy.o *nav.o *bullets.o *utils.o *render.o) .text EXCLUDE_FILE(*enemy.o *nav.o *bullets.o *utils.o *render.o) .text.*)
         *(.rodata .rodata.* .gnu.linkonce.r.*)
         *(.glue_7 .glue_7t .vfp11_veneer .v4_bx .iplt .igot.plt)
         . = ALIGN(4);
@@ -28,6 +28,12 @@ SECTIONS
     {
         __iwram_start = .;
         *(.iwram .iwram.*)
+        /* hot per-frame code runs from fast IWRAM (Thumb, no ROM wait states) */
+        *enemy.o(.text .text.*)
+        *nav.o(.text .text.*)
+        *bullets.o(.text .text.*)
+        *utils.o(.text .text.*)
+        *render.o(.text .text.*)
         *(.data .data.*)
         . = ALIGN(4);
         __iwram_end = .;

@@ -25,7 +25,7 @@ BG4_BLOOD = [  # floor + blood / ooze decals
     '#06080c', '#10141a', '#1a2028', '#262d37', '#353f4b', '#4d5967', '#5a0e0e', '#8c1818',
     '#b52020', '#d63a2a', '#3c1a14', '#2b4034', '#4aa83a', '#7aff3a', '#1c2a24', '#a3b0bc']
 BG6_MINI = [  # minimap + UI panel
-    '#000000', '#05070a', '#1d2b44', '#5b6b7d', '#e8742a', '#3ad0ff', '#f2c230', '#7aff3a',
+    '#000000', '#05070a', '#1d2b44', '#5b6b7d', '#e8742a', '#34506e', '#f2c230', '#7aff3a',
     '#d12a2a', '#e8f0f4', '#0e131b', '#2a3a52', '#7a8794', '#3a4a60', '#162033', '#9aa8b4']
 
 # HUD text colours: (main, light, dark)

@@ -151,16 +151,13 @@ def floor_lab(variant=0):
 def floor_test(variant=0):
     b = 3
     c = T(col(b, 2))
-    c.noise(0, 0, 8, 8, [col(b, 3), col(b, 15)], 0.18, 7 + variant)
-    if variant == 0:
-        c.hline(0, 3, 8, col(b, 8))
-        c.hline(0, 4, 8, col(b, 9))
-    elif variant == 1:
-        c.vline(3, 0, 8, col(b, 8))
-        c.vline(4, 0, 8, col(b, 9))
-    else:
-        c.hline(0, 3, 4, col(b, 8)); c.hline(0, 4, 4, col(b, 9))
-        c.vline(3, 3, 5, col(b, 8)); c.vline(4, 4, 4, col(b, 9))
+    c.noise(0, 0, 8, 8, [col(b, 3)], 0.12, 7 + variant)
+    c.hline(0, 0, 8, col(b, 15))
+    c.vline(0, 0, 8, col(b, 15))
+    if variant == 1:
+        c.px(3, 3, col(b, 8)); c.px(4, 3, col(b, 9)); c.px(3, 4, col(b, 9))
+    elif variant == 2:
+        c.hline(2, 5, 4, col(b, 8)); c.px(2, 4, col(b, 8)); c.px(5, 6, col(b, 9))
     return c
 
 
@@ -180,7 +177,6 @@ def floor_hazard(phase=0):
 def decal_blood(kind, base_seed=1):
     b = 4
     c = floor_concrete(base_seed, 0)
-    c.remap({i: i + 64 if False else i for i in range(256)})
     # rebuild on bank 4 slots (slots 2-5 identical to bank 0)
     c = floor_concrete(base_seed, b)
     r = random.Random(100 + kind)
@@ -302,7 +298,7 @@ def wall_front(kind, open_sides, seed=2):
         bb = 1
         c = T(col(bb, 3))
         c.hline(0, 0, 8, col(bb, 4)); c.hline(0, 7, 8, col(bb, 1)); c.hline(0, 6, 8, col(bb, 2))
-        c.rect(0, 1, 8, 2, col(bb, 4)); c.hline(0, 1, 8, col(bb, 14)) if False else None
+        c.rect(0, 1, 8, 2, col(bb, 4))
         c.hline(0, 2, 8, col(bb, 2))
         c.rect(0, 4, 8, 2, col(bb, 11)); c.hline(0, 4, 8, col(bb, 10)); c.hline(0, 5, 8, col(bb, 2))
         c.vline(2, 1, 5, col(bb, 1)); c.vline(5, 1, 5, col(bb, 1))
@@ -334,7 +330,6 @@ def wall_front(kind, open_sides, seed=2):
         for y in (2, 4):
             c.hline(1, y, 6, col(b, 3))
         c.hline(1, 3, 6, col(b, 1)); c.hline(1, 5, 6, col(b, 2))
-        c.frame(1, 2, 6, 4, col(b, 5)) if False else None
         c.px(0, 2, col(b, 5)); c.px(7, 2, col(b, 5))
     elif kind == 'sign':
         bb = 1
@@ -387,9 +382,7 @@ def obj_crate(variant=0):
         c.rect(1, 2, 14, 13, col(b, 5))
         c.frame(1, 2, 14, 13, col(b, 3))
         c.line(2, 3, 13, 13, col(b, 3)); c.line(13, 3, 2, 13, col(b, 3))
-        c.line(2, 4, 12, 13, col(b, 6)) if False else None
         c.hline(1, 2, 14, col(b, 7))
-        c.hline(0, 0, 16, col(b, 0)) if False else None
         c.rect(0, 15, 16, 1, col(b, 1))
     elif variant == 1:  # military green with stencil
         c.rect(0, 1, 16, 15, col(b, 9))
@@ -498,7 +491,6 @@ def obj_tank(broken=False):
         for (x, y) in [(7, 6), (8, 10), (6, 14), (9, 16)]:
             c.px(x, y, col(b, 10))
         c.hline(4, 2, 8, col(b, 6))
-        c.rect(7, 7, 2, 7, col(b, 3)) if False else None
     else:
         c.rect(5, 12, 6, 6, col(b, 8)); c.rect(5, 12, 2, 6, col(b, 9))
         c.line(5, 4, 10, 11, col(b, 7)); c.line(10, 4, 6, 12, col(b, 7)); c.line(8, 3, 8, 12, col(b, 6))
@@ -527,7 +519,6 @@ def obj_generator(on=False):
     if on:
         c.rect(14, 6, 7, 3, col(b, 10)); c.px(15, 7, col(b, 14)); c.hline(16, 7, 3, col(b, 14))
         c.px(15, 11, col(b, 12)); c.px(17, 11, col(b, 12)); c.px(19, 11, col(b, 7))
-        c.hline(2, 1, 20, col(b, 7)) if False else None
         c.rect(9, 0, 6, 2, col(b, 5)); c.px(11, 0, col(b, 7))
     else:
         c.rect(14, 6, 7, 3, col(b, 1))
@@ -614,7 +605,6 @@ def obj_weapon_rack(weapon):
         c.rect(3, 2, 8, 3, col(b, 3)); c.rect(10, 3, 4, 1, col(b, 12)); c.px(5, 3, col(b, 12)); c.px(7, 3, col(b, 12))
         c.px(14, 3, col(b, 14))
     # little amber light
-    c.px(1, 1, col(b, 7)) if False else None
     return c
 
 
@@ -658,14 +648,16 @@ def anim_gear(frame, size=16):
             dx, dy = x + 0.5 - r, y + 0.5 - r
             d = math.hypot(dx, dy)
             a = math.atan2(dy, dx) + ang0
-            tooth = (math.cos(a * teeth) > 0)
-            outer = r - 0.6 if tooth else r - 2.4
+            tooth = (math.cos(a * teeth) > -0.2)
+            outer = r - 0.6 if tooth else r - 2.6
             if d <= outer:
-                c.px(x, y, col(b, 3 if d > r - 4.2 else 2))
-            if d <= 2.2:
+                c.px(x, y, col(b, 4) if d > r - 3.4 else col(b, 3))
+            if d <= 2.4:
                 c.px(x, y, col(b, 1))
-            if 4.0 < d < 5.0 and abs(math.cos(a * 4)) > 0.8:
+            elif 4.2 < d < 5.2 and abs(math.cos(a * 4)) > 0.75:
                 c.px(x, y, col(b, 1))
+            elif d <= 4.2 and d > 2.4:
+                c.px(x, y, col(b, 2))
     c.outline(col(b, 1))
     return c
 

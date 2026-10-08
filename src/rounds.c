@@ -53,11 +53,17 @@ void Rounds_StartWave(int wave)
     rounds.timer = 0;
     rounds.spawn_timer = 30;
     rounds.banner = 1;
+    rounds.since_kill = 0;
+    rounds.last_kills = G.kills;
     G.state_frame = 0;
 }
 
 static int pick_type(int w)
 {
+#ifdef BOT_ENEMY
+    (void)w;
+    return BOT_ENEMY;
+#endif
     int r = RandRange(100);
     if (w <= 5) return (w == 5 && r < 12) ? E_RUSHER : E_SHAMBLER;
     int special = MIN(65, 8 + (w - 6) * 3);           /* % chance of a non-shambler */
@@ -141,6 +147,18 @@ void Rounds_Update(void)
                 rounds.spawn_timer = (u16)spawn_interval(rounds.wave);
                 /* later waves occasionally burst */
                 if (rounds.wave >= 6 && RandRange(100) < 25) rounds.spawn_timer >>= 2;
+            }
+        }
+        /* failsafe: a zombie that cannot reach the player (wedged somewhere) must never stall a wave */
+        if (G.kills != rounds.last_kills) { rounds.last_kills = G.kills; rounds.since_kill = 0; }
+        else if (rounds.to_spawn == 0 && enemy_count_alive > 0 && ++rounds.since_kill > 1500) {
+            rounds.since_kill = 900;
+            int px = player.x >> 8, py = player.y >> 8;
+            for (int i = 0; i < MAX_ENEMIES; i++) {
+                Enemy *e = &enemies[i];
+                if (!e->active || e->state == ES_DEAD || e->state == ES_SPECIAL) continue;
+                if (Dist((e->x >> 8) - px, (e->y >> 8) - py) > 150 || Nav_Dist(e->x >> 11, e->y >> 11) >= 255)
+                    Enemy_TeleportNearPlayer(e, 70, 110);
             }
         }
         if (rounds.to_spawn == 0 && enemy_count_alive == 0) {

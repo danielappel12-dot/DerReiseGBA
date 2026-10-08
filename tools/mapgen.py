@@ -225,13 +225,11 @@ def build(ts):
         P('crate0' if (px // 2) % 2 else 'crate1', px, py, 'C')
     P('crate2', 8, 15, 'C')
     P('barrel0', 1, 1, 'C'); P('barrel2', 17, 4, 'C'); P('barrel0', 1, 16, 'C'); P('barrel1', 16, 16, 'C'); P('barrel0', 2, 1, 'C')
-    P('perk:SECOND WIND', 15, 0, 'C') if False else None
     # ------------------------------------------------------------------ STORAGE ROOM (x44..61,y22..41)
     for (px, py) in [(2, 3), (4, 3), (12, 3), (14, 3), (4, 8), (6, 8), (12, 8), (14, 8), (2, 13), (4, 13), (13, 13), (15, 13),
                      (3, 17), (13, 17)]:
         P('crate0' if (px + py) % 3 else 'crate1', px, py, 'S')
     P('barrel0', 16, 6, 'S'); P('barrel1', 1, 17, 'S'); P('barrel2', 16, 18, 'S')
-    P('term', 11, 12, 'S') if False else None
     # ------------------------------------------------------------------ GENERATOR ROOM (x22..41,y22..41)
     for (px, py) in [(4, 4), (14, 4), (4, 13), (14, 13)]:
         P('lathe1' if py > 8 else 'lathe0', px, py, 'G')
@@ -248,27 +246,21 @@ def build(ts):
     P('desk0', 4, 11, 'MS'); P('desk1', 13, 11, 'MS')
     P('barrel1', 1, 11, 'MS'); P('barrel2', 17, 12, 'MS')
     # ------------------------------------------------------------------ RESEARCH LAB (x2..19,y2..19)
-    for px in (1, 4, 13, 16):
-        P('server%d' % (px % 2), px, 0, 'RL') if False else None
     for (px, py) in [(2, 4), (5, 4), (12, 4), (15, 4)]:
         P('desk1' if px % 2 else 'desk0', px, py, 'RL')
     P('tank', 1, 9, 'RL'); P('tankb', 15, 11, 'RL'); P('tank', 15, 14, 'RL')
     P('desk0', 4, 13, 'RL'); P('desk2', 11, 14, 'RL')
-    P('term', 8, 0, 'RL') if False else None
     # ------------------------------------------------------------------ TEST CHAMBER (x22..41,y2..19)
     P('tank', 4, 3, 'T'); P('tankb', 14, 3, 'T'); P('tank', 4, 12, 'T'); P('tank', 14, 12, 'T')
-    P('server1', 8, 6, 'T'); P('server0', 10, 6, 'T') if False else None
-    P('crate1', 1, 8, 'T') if False else None
+    P('server1', 8, 6, 'T')
     # ------------------------------------------------------------------ SECURITY OFFICE (x44..61,y2..19)
     for (px, py) in [(3, 5), (6, 5), (11, 5), (14, 5), (3, 11), (6, 11), (12, 11)]:
         P('desk1' if (px + py) % 2 else 'desk0', px, py, 'SO')
-    P('server0', 15, 11, 'SO') if False else None
     P('barrel0', 16, 17, 'SO')
     # ------------------------------------------------------------------ LOWER MAINTENANCE (x2..19,y44..61)
     for (px, py) in [(3, 4), (7, 4), (12, 4), (4, 10), (13, 10), (8, 14), (3, 14), (15, 14)]:
         P('barrel1' if px % 2 else 'barrel2', px, py, 'M')
     P('crate0', 8, 8, 'M'); P('crate1', 10, 8, 'M')
-    P('lathe1', 14, 1, 'M') if False else None
     for x in range(1, 17):
         P('pipeh', x, 7, 'M', check=False) if x not in (8, 9, 10, 11) else None
     for y in range(8, 16):

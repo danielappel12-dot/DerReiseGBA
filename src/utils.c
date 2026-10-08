@@ -40,7 +40,7 @@ u32 Dist(s32 dx, s32 dy)
     return ax > ay ? ax + ((ay * 3) >> 3) : ay + ((ax * 3) >> 3);
 }
 
-int UInt2Str(char *buf, u32 v, int width, char pad)
+IWRAM_CODE int UInt2Str(char *buf, u32 v, int width, char pad)
 {
     char tmp[12];
     int n = 0, i;

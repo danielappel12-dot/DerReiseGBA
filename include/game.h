@@ -41,6 +41,7 @@ typedef struct {
     u8  intensity;
     u8  lag;                 /* last frame overran the vblank */
     u8  fps;
+    u8  fps_low;
     u8  from_pause;
 } Game;
 

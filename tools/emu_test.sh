@@ -9,6 +9,7 @@
 #   down:KEY / up:KEY    hold / release an X key (mGBA default map below)
 #   tap:KEY              press+release (80 ms)
 #   hold:KEY:SECONDS     hold a key for a while
+#   combo:HOLD:TAP       hold one key while tapping another (e.g. combo:BackSpace:Right)
 #
 # mGBA default keys: arrows = D-pad, x = A, z = B, a = L, s = R,
 #                    Return = START, BackSpace = SELECT.
@@ -20,7 +21,7 @@ if ! xdpyinfo >/dev/null 2>&1; then
   sleep 1
 fi
 rm -f /tmp/mgba_test.log
-SDL_AUDIODRIVER=dummy /usr/games/mgba -3 "$ROM" >/tmp/mgba_test.log 2>&1 &
+SDL_AUDIODRIVER=dummy /usr/games/mgba -3 ${EMU_ARGS:-} "$ROM" >/tmp/mgba_test.log 2>&1 &
 EMU=$!
 sleep 2
 WIN=$(xdotool search --name "mGBA" 2>/dev/null | head -1)
@@ -32,6 +33,8 @@ for step in "$@"; do
     down:*)  xdotool keydown "${step#down:}" ;;
     up:*)    xdotool keyup "${step#up:}" ;;
     tap:*)   xdotool keydown "${step#tap:}"; sleep 0.08; xdotool keyup "${step#tap:}" ;;
+    combo:*) k=${step#combo:}; a=${k%%:*}; b=${k##*:}
+             xdotool keydown "$a"; sleep 0.15; xdotool keydown "$b"; sleep 0.1; xdotool keyup "$b"; sleep 0.1; xdotool keyup "$a"; sleep 0.15 ;;
     hold:*)  k=${step#hold:}; key=${k%%:*}; secs=${k##*:}
              xdotool keydown "$key"; sleep "$secs"; xdotool keyup "$key" ;;
   esac
