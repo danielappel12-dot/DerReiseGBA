@@ -45,7 +45,7 @@ without building anything.
 |---|---|---|
 | `make` | `nightfall.gba` | release build |
 | `make DEBUG=1` | `nightfall_debug.gba` | debug overlay, profiler, cheats (see [Debug mode](#debug-mode)) |
-| `make BOT=1` | `nightfall_bot.gba` | self-playing, immortal stress-test build; options `BOTWAVE=n` (start wave), `BOTENEMY=n` (only spawn enemy type n), `BOTQUIET=1` (no overlay) |
+| `make BOT=1` | `nightfall_bot.gba` | self-playing, immortal stress-test build; options `BOTWAVE=n` (start wave), `BOTENEMY=n` (only spawn enemy type n), `BOTQUIET=1` (no overlay), `BOTSMART=1` (mortal kiting bot with simulated shopping – used to sanity-check the difficulty curve: it dies around waves 5–10) |
 | `make assets` | – | regenerate pixel art, level, tables and music data (needs Pillow) |
 | `make run` | – | build + launch in mGBA (`EMU=...` to pick another emulator) |
 | `make clean` | – | remove build output |

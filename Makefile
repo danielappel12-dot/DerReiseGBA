@@ -3,7 +3,7 @@
 #
 #   make            release build  -> nightfall.gba
 #   make DEBUG=1    debug build    -> nightfall_debug.gba (debug overlay + cheats)
-#   make BOT=1      self-playing stress-test build -> nightfall_bot.gba
+#   make BOT=1      self-playing stress-test build -> nightfall_bot.gba (BOTSMART=1: mortal kiting bot)
 #   make assets     regenerate pixel art / map / audio tables (needs python3 + Pillow)
 #   make run        launch the ROM in mGBA
 #   make clean
@@ -21,7 +21,7 @@ EMU     ?= mgba
 
 ifeq ($(BOT),1)
 TARGET  := nightfall_bot
-DEFS    := -DDEBUG=1 -DBOT=1 $(if $(BOTWAVE),-DBOT_WAVE=$(BOTWAVE)) $(if $(BOTENEMY),-DBOT_ENEMY=$(BOTENEMY)) $(if $(BOTQUIET),-DBOT_QUIET=1)
+DEFS    := -DDEBUG=1 -DBOT=1 $(if $(BOTWAVE),-DBOT_WAVE=$(BOTWAVE)) $(if $(BOTENEMY),-DBOT_ENEMY=$(BOTENEMY)) $(if $(BOTQUIET),-DBOT_QUIET=1) $(if $(BOTSMART),-DBOT_SMART=1)
 OPT     := -O2
 else ifeq ($(DEBUG),1)
 TARGET  := nightfall_debug

@@ -164,7 +164,7 @@ static void update_play(void)
     }
     if (KeyPressed(KEY_START) && !KeyHeld(KEY_SELECT) && player.state == PS_ALIVE) { Game_SetState(ST_PAUSED); return; }
 
-#ifdef BOT
+#if defined(BOT) && !defined(BOT_SMART)
     G.god = 1;
     if ((G.frame % 300) == 0) Weapon_FillAmmo(&player);
 #ifdef BOT_WAVE
@@ -177,6 +177,24 @@ static void update_play(void)
         Enemies_KillAll(0);
         Rounds_StartWave(rounds.wave + 1);
         if (rounds.wave == 6) { Map_RevealAll(); Map_SetPower(1); for (int d = 0; d < NUM_DOORS; d++) Map_OpenDoor(d); }
+    }
+#endif
+#ifdef BOT_SMART
+    {   /* the smart bot cannot shop, so approximate a sensible player's purchases */
+        static u16 seen_wave;
+        if (rounds.wave != seen_wave) {
+            seen_wave = rounds.wave;
+            Weapon_FillAmmo(&player);
+            switch (rounds.wave) {
+            case 3: Weapon_Give(&player, W_SHOTGUN); break;
+            case 4: Perk_Buy(PERK_QUICK_HANDS); break;
+            case 6: Weapon_Give(&player, W_SMG); Perk_Buy(PERK_SECOND_WIND); break;
+            case 8: Weapon_Give(&player, W_RIFLE); Perk_Buy(PERK_IRON_HEART); break;
+            case 11: Weapon_Give(&player, W_ARC); Perk_Buy(PERK_FIELD_MEDIC); break;
+            case 14: Perk_Buy(PERK_STEADY_AIM); break;
+            }
+            if (G.score > 0) Hud_Message("BOT SHOPPED", 0, HC_GRAY, 30);
+        }
     }
 #endif
     int running = (rounds.phase != RP_START);
