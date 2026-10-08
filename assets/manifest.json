@@ -1,0 +1,370 @@
+{
+ "bg_palette": null,
+ "obj_palette": null,
+ "sheets": [
+  {
+   "name": "player",
+   "png": "assets/sprites/player.png",
+   "fw": 16,
+   "fh": 32,
+   "cols": 8,
+   "count": 21,
+   "names": [
+    "P_WALK_DOWN_0",
+    "P_WALK_DOWN_1",
+    "P_WALK_DOWN_2",
+    "P_WALK_DOWN_3",
+    "P_WALK_UP_0",
+    "P_WALK_UP_1",
+    "P_WALK_UP_2",
+    "P_WALK_UP_3",
+    "P_WALK_SIDE_0",
+    "P_WALK_SIDE_1",
+    "P_WALK_SIDE_2",
+    "P_WALK_SIDE_3",
+    "P_SHOOT_DOWN",
+    "P_SHOOT_UP",
+    "P_SHOOT_SIDE",
+    "P_RELOAD_DOWN",
+    "P_RELOAD_UP",
+    "P_RELOAD_SIDE",
+    "P_DEAD_0",
+    "P_DEAD_1",
+    "P_DEAD_2"
+   ]
+  },
+  {
+   "name": "shambler",
+   "png": "assets/sprites/shambler.png",
+   "fw": 16,
+   "fh": 32,
+   "cols": 9,
+   "count": 9,
+   "names": [
+    "E_SHAMBLER_DOWN_0",
+    "E_SHAMBLER_DOWN_1",
+    "E_SHAMBLER_DOWN_2",
+    "E_SHAMBLER_UP_0",
+    "E_SHAMBLER_UP_1",
+    "E_SHAMBLER_UP_2",
+    "E_SHAMBLER_SIDE_0",
+    "E_SHAMBLER_SIDE_1",
+    "E_SHAMBLER_SIDE_2"
+   ]
+  },
+  {
+   "name": "rusher",
+   "png": "assets/sprites/rusher.png",
+   "fw": 16,
+   "fh": 32,
+   "cols": 9,
+   "count": 9,
+   "names": [
+    "E_RUSHER_DOWN_0",
+    "E_RUSHER_DOWN_1",
+    "E_RUSHER_DOWN_2",
+    "E_RUSHER_UP_0",
+    "E_RUSHER_UP_1",
+    "E_RUSHER_UP_2",
+    "E_RUSHER_SIDE_0",
+    "E_RUSHER_SIDE_1",
+    "E_RUSHER_SIDE_2"
+   ]
+  },
+  {
+   "name": "spitter",
+   "png": "assets/sprites/spitter.png",
+   "fw": 16,
+   "fh": 32,
+   "cols": 9,
+   "count": 9,
+   "names": [
+    "E_SPITTER_DOWN_0",
+    "E_SPITTER_DOWN_1",
+    "E_SPITTER_DOWN_2",
+    "E_SPITTER_UP_0",
+    "E_SPITTER_UP_1",
+    "E_SPITTER_UP_2",
+    "E_SPITTER_SIDE_0",
+    "E_SPITTER_SIDE_1",
+    "E_SPITTER_SIDE_2"
+   ]
+  },
+  {
+   "name": "stalker",
+   "png": "assets/sprites/stalker.png",
+   "fw": 16,
+   "fh": 32,
+   "cols": 9,
+   "count": 9,
+   "names": [
+    "E_STALKER_DOWN_0",
+    "E_STALKER_DOWN_1",
+    "E_STALKER_DOWN_2",
+    "E_STALKER_UP_0",
+    "E_STALKER_UP_1",
+    "E_STALKER_UP_2",
+    "E_STALKER_SIDE_0",
+    "E_STALKER_SIDE_1",
+    "E_STALKER_SIDE_2"
+   ]
+  },
+  {
+   "name": "brute",
+   "png": "assets/sprites/brute.png",
+   "fw": 32,
+   "fh": 32,
+   "cols": 9,
+   "count": 9,
+   "names": [
+    "E_BRUTE_DOWN_0",
+    "E_BRUTE_DOWN_1",
+    "E_BRUTE_DOWN_2",
+    "E_BRUTE_UP_0",
+    "E_BRUTE_UP_1",
+    "E_BRUTE_UP_2",
+    "E_BRUTE_SIDE_0",
+    "E_BRUTE_SIDE_1",
+    "E_BRUTE_SIDE_2"
+   ]
+  },
+  {
+   "name": "corpses",
+   "png": "assets/sprites/corpses.png",
+   "fw": 16,
+   "fh": 16,
+   "cols": 8,
+   "count": 8,
+   "names": [
+    "C_SHAMBLER_0",
+    "C_SHAMBLER_1",
+    "C_RUSHER_0",
+    "C_RUSHER_1",
+    "C_SPITTER_0",
+    "C_SPITTER_1",
+    "C_STALKER_0",
+    "C_STALKER_1"
+   ]
+  },
+  {
+   "name": "brute_corpse",
+   "png": "assets/sprites/brute_corpse.png",
+   "fw": 32,
+   "fh": 16,
+   "cols": 2,
+   "count": 2,
+   "names": [
+    "C_BRUTE_0",
+    "C_BRUTE_1"
+   ]
+  },
+  {
+   "name": "fx8",
+   "png": "assets/sprites/fx8.png",
+   "fw": 8,
+   "fh": 8,
+   "cols": 16,
+   "count": 23,
+   "names": [
+    "FX_BULLET",
+    "FX_BULLET_BIG",
+    "FX_BULLET_ARC",
+    "FX_SPIT_0",
+    "FX_SPIT_1",
+    "FX_RAY",
+    "FX_BLOOD_0",
+    "FX_BLOOD_1",
+    "FX_BLOOD_2",
+    "FX_SPARK_0",
+    "FX_SPARK_1",
+    "FX_SPARK_2",
+    "FX_PUFF_0",
+    "FX_PUFF_1",
+    "FX_PUFF_2",
+    "FX_ARC_0",
+    "FX_ARC_1",
+    "FX_RETICLE",
+    "FX_MINIDOT",
+    "FX_DMG_U",
+    "FX_DMG_D",
+    "FX_DMG_L",
+    "FX_DMG_R"
+   ]
+  },
+  {
+   "name": "fx16",
+   "png": "assets/sprites/fx16.png",
+   "fw": 16,
+   "fh": 16,
+   "cols": 8,
+   "count": 14,
+   "names": [
+    "FX_MUZZLE_0",
+    "FX_MUZZLE_1",
+    "FX_EXPLODE_0",
+    "FX_EXPLODE_1",
+    "FX_EXPLODE_2",
+    "FX_EXPLODE_3",
+    "FX_SLASH_0",
+    "FX_SLASH_1",
+    "FX_SLASH_2",
+    "FX_PU_AMMO",
+    "FX_PU_OVERDRIVE",
+    "FX_PU_DOUBLE",
+    "FX_PU_RESTORE",
+    "FX_PU_CLEAR"
+   ]
+  },
+  {
+   "name": "shadow",
+   "png": "assets/sprites/shadow.png",
+   "fw": 16,
+   "fh": 8,
+   "cols": 1,
+   "count": 1,
+   "names": [
+    "SHADOW_S"
+   ]
+  },
+  {
+   "name": "shadow_big",
+   "png": "assets/sprites/shadow_big.png",
+   "fw": 32,
+   "fh": 8,
+   "cols": 1,
+   "count": 1,
+   "names": [
+    "SHADOW_B"
+   ]
+  }
+ ],
+ "bg": {
+  "env": {
+   "png": "assets/tiles/env.png",
+   "count": 266,
+   "cols": 16
+  },
+  "anim": {
+   "png": "assets/tiles/anim.png",
+   "count": 20,
+   "cols": 16
+  },
+  "font": {
+   "png": "assets/ui/font.png",
+   "count": 96,
+   "cols": 16
+  },
+  "bigfont": {
+   "png": "assets/ui/bigfont.png",
+   "count": 42,
+   "cols": 16,
+   "chars": "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789?!:-. "
+  },
+  "ui": {
+   "png": "assets/ui/ui.png",
+   "count": 22,
+   "cols": 16,
+   "names": [
+    "BLANK",
+    "BAR_0",
+    "BAR_1",
+    "BAR_2",
+    "BAR_3",
+    "BAR_4",
+    "BAR_5",
+    "BAR_6",
+    "BAR_7",
+    "BAR_8",
+    "PANEL_TL",
+    "PANEL_T",
+    "PANEL_TR",
+    "PANEL_L",
+    "PANEL_C",
+    "PANEL_R",
+    "PANEL_BL",
+    "PANEL_B",
+    "PANEL_BR",
+    "ICON_HEART",
+    "ICON_BULLET",
+    "ICON_COIN"
+   ]
+  },
+  "logo": {
+   "png": "assets/ui/logo.png",
+   "w": 232,
+   "h": 64
+  }
+ },
+ "lit_warm": [
+  "#06080c",
+  "#322f24",
+  "#424137",
+  "#54554c",
+  "#6c7168",
+  "#91998f",
+  "#c6d1c3",
+  "#4a5537",
+  "#5c7348",
+  "#7b9e65",
+  "#5b4327",
+  "#886336",
+  "#be8d4f",
+  "#3c4350",
+  "#567393",
+  "#ffffff"
+ ],
+ "lit_cool": [
+  "#06080c",
+  "#162d46",
+  "#243f5c",
+  "#355373",
+  "#496f92",
+  "#6b97bd",
+  "#9acff7",
+  "#2b535c",
+  "#3b716e",
+  "#579c8f",
+  "#3a4149",
+  "#63615a",
+  "#938b76",
+  "#1e4177",
+  "#3671c2",
+  "#e3ffff"
+ ],
+ "lit_base_warm": [
+  "#06080c",
+  "#10141a",
+  "#1a2028",
+  "#262d37",
+  "#353f4b",
+  "#4d5967",
+  "#6f7d8c",
+  "#1f2d28",
+  "#2b4034",
+  "#3f5c49",
+  "#2a211c",
+  "#473627",
+  "#6a5139",
+  "#16213a",
+  "#27406a",
+  "#a3b0bc"
+ ],
+ "lit_base_cool": [
+  "#06080c",
+  "#10141a",
+  "#1a2028",
+  "#262d37",
+  "#353f4b",
+  "#4d5967",
+  "#6f7d8c",
+  "#1f2d28",
+  "#2b4034",
+  "#3f5c49",
+  "#2a211c",
+  "#473627",
+  "#6a5139",
+  "#16213a",
+  "#27406a",
+  "#a3b0bc"
+ ]
+}
