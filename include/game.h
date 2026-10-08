@@ -43,6 +43,7 @@ typedef struct {
     u8  fps;
     u8  fps_low;
     u8  from_pause;
+    u8  kill_tag_t, kill_tag;        /* 'HEADSHOT' / 'MELEE KILL' feedback */
 } Game;
 
 extern Game G;

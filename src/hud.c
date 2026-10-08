@@ -196,6 +196,13 @@ void Hud_Game(void)
         if (!p->reload_t) { Hud_Text(30 - nl - 2, 17, "L:", HC_GRAY); Hud_Text(30 - nl, 17, nm, HC_GRAY); }
     }
 
+    /* ---- bonus kill feedback */
+    if (G.kill_tag_t) {
+        G.kill_tag_t--;
+        if (!(G.kill_tag_t & 4) || G.kill_tag_t > 30)
+            Hud_TextC(11, G.kill_tag == 1 ? "HEADSHOT +150" : "MELEE KILL +130", G.kill_tag == 1 ? HC_ORANGE : HC_CYAN);
+    }
+
     /* ---- power-up timers (top centre) */
     int row = 2;
     if (p->overdrive_t) { Hud_Text(0, row, "OVERDRIVE", HC_ORANGE); Hud_Num(10, row, p->overdrive_t / 60 + 1, 2, HC_ORANGE, ' '); row++; }

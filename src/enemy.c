@@ -78,6 +78,7 @@ static void kill_enemy(Enemy *e, int crit, int melee)
     else if (crit) pts = 150;
     Game_AddScore(pts);
     G.kills++;
+    if (melee || crit) { G.kill_tag = (u8)(melee ? 2 : 1); G.kill_tag_t = 50; }
     e->state = ES_DEAD;
     e->timer = 70;
     e->vx = e->vy = 0;
