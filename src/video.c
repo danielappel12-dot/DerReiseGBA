@@ -20,8 +20,8 @@ extern const u16 lit_base_palette[16];
 #define SB_HUD   28
 #define SB_MINI  29
 
-EWRAM_BSS u16 hud_map[32 * 32];
-EWRAM_BSS u16 mini_tiles[64 * 16];
+EWRAM_BSS u16 hud_map[32 * 32] ALIGN4;
+EWRAM_BSS u16 mini_tiles[64 * 16] ALIGN4;
 u8 mini_dirty;
 u8 bg_title_loaded;
 

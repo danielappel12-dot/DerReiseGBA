@@ -211,7 +211,7 @@ void Game_Init(void)
 {
     memset(&G, 0, sizeof(G));
     G.show_map = save.minimap_on;
-#ifdef BOT
+#if defined(BOT) && !defined(BOT_QUIET)
     G.debug = 1;
 #endif
     Audio_Enable(save.music_on, save.sfx_on);

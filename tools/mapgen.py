@@ -645,7 +645,7 @@ def emit_c(L, entries, path, ids_path):
         lines.append('    ' + ','.join('0x%04X' % entries[y][x] for x in range(W)) + ',')
     lines.append('};')
     lines.append('')
-    lines.append('const u8 map_flags_rom[MAP_W * MAP_H] = {')
+    lines.append('const u8 map_flags_rom[MAP_W * MAP_H] ALIGN4 = {')
     for y in range(H):
         row = []
         for x in range(W):

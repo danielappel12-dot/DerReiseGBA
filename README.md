@@ -45,7 +45,7 @@ without building anything.
 |---|---|---|
 | `make` | `nightfall.gba` | release build |
 | `make DEBUG=1` | `nightfall_debug.gba` | debug overlay, profiler, cheats (see [Debug mode](#debug-mode)) |
-| `make BOT=1` | `nightfall_bot.gba` | self-playing, immortal stress-test build (`BOTWAVE=n`, `BOTENEMY=n` options) |
+| `make BOT=1` | `nightfall_bot.gba` | self-playing, immortal stress-test build; options `BOTWAVE=n` (start wave), `BOTENEMY=n` (only spawn enemy type n), `BOTQUIET=1` (no overlay) |
 | `make assets` | – | regenerate pixel art, level, tables and music data (needs Pillow) |
 | `make run` | – | build + launch in mGBA (`EMU=...` to pick another emulator) |
 | `make clean` | – | remove build output |
@@ -263,6 +263,8 @@ tools/mapgen.py          builds BLACKSITE 13 (rooms, props, doors, lights, spawn
 tools/gen_assets.py      driver: writes assets/*.png, assets/manifest.json, data/map_data.c ...
 tools/png2gba.py         indexed PNG → 4bpp tile data (data/gfx_data.c) + ids (data/gfx_ids.h)
 tools/gen_audio.py       music patterns → data/audio_data.c  (sound effects live in src/audio.c)
+tools/audio_preview.py   renders the music to assets/audio/*.wav with a small PSG model (for auditioning)
+tools/emu_test.sh        headless mGBA harness (Xvfb + xdotool): scripted input + screenshots
 tools/gbafix.py          header checksum fixer (devkitPro `gbafix` preferred)
 ```
 

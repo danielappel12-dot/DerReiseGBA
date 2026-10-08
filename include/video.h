@@ -47,7 +47,7 @@
 #define VID_BLEND_WHITE 1
 #define VID_BLEND_BLACK 2
 
-extern u16 hud_map[32 * 32];
+extern u16 hud_map[32 * 32];   /* 4-byte aligned (memcpy32) */
 extern u16 mini_tiles[64 * 16];      /* 64 tiles x 8 words (16 halfwords) */
 extern u8  mini_dirty;
 

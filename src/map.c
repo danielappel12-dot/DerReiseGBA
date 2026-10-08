@@ -2,7 +2,7 @@
 #include "video.h"
 #include "utils.h"
 
-u8 map_flags[MAP_W * MAP_H];
+u8 map_flags[MAP_W * MAP_H] ALIGN4;
 u16 areas_open;
 u16 doors_opened;
 u8 power_on;

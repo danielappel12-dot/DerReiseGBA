@@ -55,7 +55,7 @@ void Menu_Enter(int st)
     case ST_TITLE: case ST_MENU:
         if (!bg_title_loaded) Video_LoadTitleBg();
         Video_ModeTitle();
-        Video_SetBlend(VID_BLEND_BLACK, 8);
+        Video_SetBlend(VID_BLEND_BLACK, 6);
         Video_SetScroll(0, 0);
         Audio_SetMusic(MUS_MENU);
         Audio_SetTension(0);

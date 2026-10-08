@@ -1,5 +1,8 @@
-build/
+build/*
+!build/.gitkeep
 *.elf
 __pycache__/
 *.pyc
 *.sav
+nightfall_debug.gba
+nightfall_bot.gba

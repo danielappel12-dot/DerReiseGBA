@@ -72,14 +72,14 @@ def convert(root):
 
     # palettes
     env = load(root, man['bg']['env']['png'])
-    c.append('const u16 bg_palette[256] = {')
+    c.append('const u16 bg_palette[256] ALIGN4 = {')
     p = pal15(env)
     for i in range(0, 256, 16):
         c.append('    ' + ','.join('0x%04X' % v for v in p[i:i + 16]) + ',')
     c.append('};')
     first = load(root, man['sheets'][0]['png'])
     p = pal15(first)
-    c.append('const u16 obj_palette[256] = {')
+    c.append('const u16 obj_palette[256] ALIGN4 = {')
     for i in range(0, 256, 16):
         c.append('    ' + ','.join('0x%04X' % v for v in p[i:i + 16]) + ',')
     c.append('};')

@@ -651,13 +651,13 @@ def anim_gear(frame, size=16):
             tooth = (math.cos(a * teeth) > -0.2)
             outer = r - 0.6 if tooth else r - 2.6
             if d <= outer:
-                c.px(x, y, col(b, 4) if d > r - 3.4 else col(b, 3))
+                c.px(x, y, col(b, 5) if d > r - 3.2 else col(b, 4))
             if d <= 2.4:
-                c.px(x, y, col(b, 1))
+                c.px(x, y, col(b, 7))
             elif 4.2 < d < 5.2 and abs(math.cos(a * 4)) > 0.75:
                 c.px(x, y, col(b, 1))
             elif d <= 4.2 and d > 2.4:
-                c.px(x, y, col(b, 2))
+                c.px(x, y, col(b, 3))
     c.outline(col(b, 1))
     return c
 

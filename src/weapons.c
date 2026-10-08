@@ -8,12 +8,12 @@
 
 /*  name              dmg dly mag  res  rld spr spd  range pierce pel kind      rec price sfx */
 const WeaponDef weapon_defs[W_COUNT] = {
-    { "SERVICE-9",      25, 11, 12,  96, 42,  3,  64, 190, 1, 1, WK_BULLET, 1,    0, SFX_SHOT_PISTOL  },
+    { "SERVICE-9",      25, 11, 12,  96, 42,  3,  64, 190, 1, 1, WK_BULLET, 0,    0, SFX_SHOT_PISTOL  },
     { "TRENCH SHOTGUN", 20, 36,  6,  48, 84, 14,  56,  96, 1, 6, WK_BULLET, 3,  500, SFX_SHOT_SHOTGUN },
-    { "RANGER SMG",     13,  4, 30, 210, 66,  8,  66, 150, 1, 1, WK_BULLET, 1, 1000, SFX_SHOT_SMG     },
+    { "RANGER SMG",     13,  4, 30, 210, 66,  8,  66, 150, 1, 1, WK_BULLET, 0, 1000, SFX_SHOT_SMG     },
     { "HEAVY RIFLE",    95, 28,  8,  56, 88,  1,  96, 280, 3, 1, WK_BULLET, 2, 1250, SFX_SHOT_RIFLE   },
     { "ARC LAUNCHER",   55, 34,  6,  36, 96,  2,  44, 170, 1, 1, WK_ARC,    2, 2250, SFX_SHOT_ARC     },
-    { "RAY GUN",        42, 9,  20,  60, 110, 0, 112, 230, 99, 1, WK_RAY,   1, 3000, SFX_SHOT_RAY     },
+    { "RAY GUN",        42, 9,  20,  60, 110, 0, 112, 230, 99, 1, WK_RAY,   0, 3000, SFX_SHOT_RAY     },
 };
 
 void Weapon_Reset(Player *p)
