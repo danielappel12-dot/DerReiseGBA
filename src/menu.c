@@ -278,9 +278,11 @@ void Menu_Draw(void)
         int wrow = 10;
         for (int i = 0; i < 2; i++) {
             if (player.wpn[i].id == 255) continue;
-            Hud_Text(2, wrow, weapon_defs[player.wpn[i].id].name, i == player.cur ? HC_WHITE : HC_GRAY);
-            Hud_Num(16, wrow, player.wpn[i].mag, 2, HC_GRAY, '0'); Hud_Text(18, wrow, "/", HC_GRAY);
-            Hud_Num(19, wrow, player.wpn[i].reserve, 3, HC_GRAY, '0');
+            const char *wn = weapon_defs[player.wpn[i].id].name;
+            Hud_Text(2, wrow, wn, player.wpn[i].pap ? HC_CYAN : (i == player.cur ? HC_WHITE : HC_GRAY));
+            if (player.wpn[i].pap) Hud_Text(2 + strlen_(wn), wrow, "+", HC_CYAN);
+            Hud_Num(17, wrow, player.wpn[i].mag, 3, HC_GRAY, '0'); Hud_Text(20, wrow, "/", HC_GRAY);
+            Hud_Num(21, wrow, player.wpn[i].reserve, 3, HC_GRAY, '0');
             wrow += 2;
         }
         Hud_Text(2, 14, "PERKS", HC_YELLOW);

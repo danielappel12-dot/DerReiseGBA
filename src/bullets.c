@@ -30,6 +30,7 @@ void Bullets_Spawn(s32 x, s32 y, u8 angle, int speed16, int dmg, int pierce, int
         b->life = (s16)((range << 8) / (sp ? sp : 1));
         b->dmg = (u16)dmg;
         b->hit = 0;
+        b->bounces = (type == BT_BOUNCE) ? 4 : 0;
         return;
     }
 }
@@ -82,6 +83,21 @@ static void arc_chain(Enemy *src, int dmg, int from_angle)
     (void)hits;
 }
 
+/* area damage around a rocket impact */
+static void explode(int x, int y, int dmg)
+{
+    Fx_Explosion(x, y - 8);
+    Fx_Shake(7);
+    Audio_PlaySfx(SFX_EXPLOSION);
+    for (int i = 0; i < MAX_ENEMIES; i++) {
+        Enemy *e = &enemies[i];
+        if (!e->active || e->state == ES_DEAD || e->hidden) continue;
+        int d = (int)Dist((e->x >> 8) - x, ((e->y >> 8) - 6) - y);
+        if (d > 34) continue;
+        Enemy_Damage(e, d < 16 ? dmg : dmg / 2, 0, 0, Atan2(((e->y >> 8) - 6) - y, (e->x >> 8) - x));
+    }
+}
+
 IWRAM_CODE static int hit_enemies(Bullet *b)
 {
     int bx = b->x >> 8, by = b->y >> 8;
@@ -97,8 +113,9 @@ IWRAM_CODE static int hit_enemies(Bullet *b)
         else if (e->type == E_RUSHER) { up = 11; }
         if (dx > wx || dx < -wx || dy > 4 || dy < -up) continue;
         b->hit |= 1u << i;
-        int crit = (b->type != BT_PELLET && b->type != BT_ARC && RandRange(100) < 9);
+        int crit = (b->type == BT_BULLET && RandRange(100) < 9);
         int ang = Atan2(b->vy, b->vx);
+        if (b->type == BT_ROCKET) { explode(bx, by, b->dmg); return 1; }
         if (b->type == BT_ARC) {
             Enemy_Damage(e, b->dmg, 0, 0, ang);
             arc_chain(e, b->dmg * 3 / 4, ang);
@@ -122,6 +139,19 @@ void Bullets_Update(void)
             b->y += b->vy >> 1;
             int bx = b->x >> 8, by = b->y >> 8;
             if (Map_SolidPx(bx, by)) {
+                if (b->type == BT_ROCKET) { explode(bx - (b->vx >> 7), by - (b->vy >> 7), b->dmg); b->active = 0; break; }
+                if (b->type == BT_BOUNCE && b->bounces) {
+                    /* reflect off whichever axis hit the wall, restart from the last free position */
+                    s32 ox = b->x - (b->vx >> 1), oy = b->y - (b->vy >> 1);
+                    int hx = Map_SolidPx(bx, (int)(oy >> 8)), hy = Map_SolidPx((int)(ox >> 8), by);
+                    if (hx || !hy) b->vx = (s16)-b->vx;
+                    if (hy || !hx) b->vy = (s16)-b->vy;
+                    b->x = ox; b->y = oy;
+                    b->bounces--;
+                    b->hit = 0;
+                    Fx_Sparks(bx, by, 2);
+                    continue;
+                }
                 Fx_Sparks(bx - (b->vx >> 7), by - (b->vy >> 7), 2);
                 b->active = 0;
                 break;

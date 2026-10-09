@@ -143,6 +143,34 @@ signs, blood trails, broken containment tubes and abandoned equipment.
 | **ARC LAUNCHER** | slow electric bolt that chains to 3 nearby zombies | 2250 (power) |
 | **RAY GUN** | experimental energy beam, pierces everything, very limited ammo | 3000 (power) |
 
+**Mystery Box weapons** (not sold anywhere – you can only get them from the box):
+
+| Weapon | Role |
+|---|---|
+| **HAND CANNON** | slow revolver, 70 damage, pierces 2 |
+| **TWIN-9** | dual pistols, fast and accurate, big magazine |
+| **BUZZSAW** | huge 90-round magazine, tiny damage, insane fire rate |
+| **BLAST TUBE** | rocket launcher: explodes on impact, splash damages every zombie nearby |
+| **EMBER THROWER** | short-range flame stream that pierces whole crowds |
+| **BOUNCER** | energy slugs that ricochet off walls up to 4 times |
+| **LONGSHOT** | sniper rifle, 150 damage, pierces 4, very long range |
+
+### Mystery Box (Cargo Bay, $950)
+
+Hold **B** at the steel chest to pay and open it: a weapon icon floats above the box and
+cycles through the arsenal, slowing down until it settles (about 2.5 s). While it is
+settled, hold **B** again within 7 seconds to **take** it, otherwise the box closes and
+your points are gone. You never roll a weapon you already carry (and never the starter).
+Taking it replaces the weapon you are holding if both slots are full; a weapon you
+already own is simply refilled.
+
+### Pack-a-Punch (Generator Room, $3000, needs power)
+
+Switch on the generator, then hold **B** at the blue energy press: the weapon in your
+hands is upgraded permanently (until death) – **double damage, +50 % magazine and
+reserve ammo, 15 % faster fire rate**, refilled on the spot. Upgraded weapons are shown
+in cyan with a `+` after the name on the HUD and status screen. One upgrade per weapon.
+
 ### Zombies
 
 | Type | Behaviour |
@@ -189,7 +217,7 @@ Only exists in `make DEBUG=1` / `make BOT=1` builds.
 | **SELECT + A** | advance to the next wave |
 | **SELECT + B** | toggle invincibility |
 | **SELECT + R** | reveal map + switch power on |
-| **SELECT + START** | teleport to the next interaction zone (doors, generator, perks, racks, terminals) |
+| **SELECT + START** | teleport to the next interaction zone (doors, generator, Pack-a-Punch, mystery box, perks, racks, terminals) |
 | **SELECT + L+R** | die (tests the game-over flow) |
 
 Tapping SELECT alone (release without another button) still opens the status screen.
@@ -285,8 +313,8 @@ Conventions:
 * To edit art by hand: modify `assets/**/*.png`, then run `python3 tools/png2gba.py`
   (`make assets` regenerates the PNGs from the procedural sources and **overwrites** manual edits).
 
-Budget (all enforced by assertions in the tools): 266 of 512 environment tiles, 473 of 512
-font/UI/logo tiles, 733 of 1024 sprite tiles.
+Budget (all enforced by assertions in the tools): 284 of 512 environment tiles, 478 of 512
+font/UI/logo tiles, 816 of 1024 sprite tiles.
 
 ### Audio
 

@@ -61,6 +61,12 @@ static const SfxVoice s_mmove[]    = { V1(0, 1200, 1200, 2, 2, 7, 0) };
 static const SfxVoice s_msel[]     = { V1(0, 800, 800, 2, 2, 8, 0), V1(2, 1200, 1200, 5, 2, 8, 1) };
 static const SfxVoice s_note[]     = { V1(0, 1500, 1500, 3, 2, 7, 0), V1(3, 1000, 1000, 3, 2, 7, 0), V1(6, 1500, 1500, 6, 2, 7, 1) };
 
+static const SfxVoice s_flame[]    = { V4(0, NZ(4, 1, 0), NZ(5, 1, 0), 4, 7, 1) };
+static const SfxVoice s_blast[]    = { V1(0, 220, 90, 12, 1, 13, 2), V4(0, NZ(8, 0, 1), NZ(10, 0, 2), 14, 12, 2) };
+static const SfxVoice s_pap[]      = { V1(0, 300, 1800, 40, 1, 12, 0), V4(0, NZ(9, 0, 3), NZ(6, 0, 2), 40, 10, 0), V1(40, 1568, 1568, 4, 2, 13, 0), V1(44, 2093, 2093, 16, 2, 13, 3) };
+static const SfxVoice s_boxtick[]  = { V1(0, 1800, 1800, 1, 2, 7, 0) };
+static const SfxVoice s_boxopen[]  = { V1(0, 400, 900, 20, 2, 11, 2), V1(20, 1200, 1200, 5, 2, 11, 1) };
+
 #define SFX(arr, prio) { sizeof(arr) / sizeof(arr[0]), prio, arr }
 static const SfxDef sfx_defs[SFX_COUNT] = {
     [SFX_NONE] = { 0, 0, 0 },
@@ -76,6 +82,8 @@ static const SfxDef sfx_defs[SFX_COUNT] = {
     [SFX_GENERATOR] = SFX(s_gen, 7),       [SFX_PERK] = SFX(s_perk, 5),            [SFX_BUY] = SFX(s_buy, 5),
     [SFX_EXPLOSION] = SFX(s_explode, 6),   [SFX_HEARTBEAT] = SFX(s_heart, 2),      [SFX_MENU_MOVE] = SFX(s_mmove, 4),
     [SFX_MENU_SELECT] = SFX(s_msel, 4),    [SFX_NOTE] = SFX(s_note, 4),
+    [SFX_SHOT_FLAME] = SFX(s_flame, 2),    [SFX_SHOT_BLAST] = SFX(s_blast, 3),     [SFX_PAP] = SFX(s_pap, 6),
+    [SFX_BOX_TICK] = SFX(s_boxtick, 1),    [SFX_BOX_OPEN] = SFX(s_boxopen, 5),
 };
 
 /* ------------------------------------------------------------------ effect engine */

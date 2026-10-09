@@ -34,7 +34,7 @@ ROOM_POS = {'RL': (0, 0), 'T': (1, 0), 'SO': (2, 0), 'MS': (0, 1), 'G': (1, 1), 
 WPN = {'SERVICE-9': 0, 'TRENCH SHOTGUN': 1, 'RANGER SMG': 2, 'HEAVY RIFLE': 3, 'ARC LAUNCHER': 4, 'RAY GUN': 5}
 PERKS = ['IRON HEART', 'QUICK HANDS', 'STEADY AIM', 'SECOND WIND', 'FIELD MEDIC']
 
-IK_DOOR, IK_GEN, IK_PERK, IK_WEAPON, IK_NOTE = 0, 1, 2, 3, 4
+IK_DOOR, IK_GEN, IK_PERK, IK_WEAPON, IK_NOTE, IK_BOX, IK_PAP = 0, 1, 2, 3, 4, 5, 6
 
 NOTES = [
     "LAB LOG 114: THE NIGHTFALL CORE HUMS BELOW. NIGHT SHIFT SAYS IT SINGS.",
@@ -115,7 +115,7 @@ class Level:
         sizes = {'crate0': (2, 2), 'crate1': (2, 2), 'crate2': (2, 2), 'barrel0': (1, 1), 'barrel1': (1, 1),
                  'barrel2': (1, 1), 'desk0': (2, 2), 'desk1': (2, 2), 'desk2': (2, 2), 'server0': (2, 2),
                  'server1': (2, 2), 'lathe0': (2, 2), 'lathe1': (2, 2), 'tank': (2, 3), 'tankb': (2, 3),
-                 'gen': (3, 2), 'term': (2, 2), 'pipeh': (1, 1), 'pipev': (1, 1)}
+                 'gen': (3, 2), 'box': (2, 2), 'pap': (2, 3), 'term': (2, 2), 'pipeh': (1, 1), 'pipev': (1, 1)}
         if name.startswith('perk:'):
             sw, sh = 2, 3
         else:
@@ -160,6 +160,10 @@ class Level:
             return A.obj_tank(True)
         if name == 'gen':
             return A.obj_generator(False)
+        if name == 'box':
+            return A.obj_mystery_box(False)
+        if name == 'pap':
+            return A.obj_pap(False)
         if name == 'term':
             return A.obj_terminal(True)
         if name == 'pipeh':
@@ -223,7 +227,7 @@ def build(ts):
     # ------------------------------------------------------------------ CARGO BAY  (x44..61,y44..61)
     for (px, py) in [(5, 6), (7, 6), (12, 6), (14, 6), (5, 10), (12, 10), (14, 10)]:
         P('crate0' if (px // 2) % 2 else 'crate1', px, py, 'C')
-    P('crate2', 8, 15, 'C')
+    P('box', 8, 15, 'C')                       # MYSTERY BOX (Cargo Bay, south wall)
     P('barrel0', 1, 1, 'C'); P('barrel2', 17, 4, 'C'); P('barrel0', 1, 16, 'C'); P('barrel1', 16, 16, 'C'); P('barrel0', 2, 1, 'C')
     # ------------------------------------------------------------------ STORAGE ROOM (x44..61,y22..41)
     for (px, py) in [(2, 3), (4, 3), (12, 3), (14, 3), (4, 8), (6, 8), (12, 8), (14, 8), (2, 13), (4, 13), (13, 13), (15, 13),
@@ -234,7 +238,7 @@ def build(ts):
     for (px, py) in [(4, 4), (14, 4), (4, 13), (14, 13)]:
         P('lathe1' if py > 8 else 'lathe0', px, py, 'G')
     P('gen', 8, 8, 'G')
-    P('barrel2', 1, 1, 'G'); P('barrel2', 18, 1, 'G'); P('barrel0', 1, 18, 'G'); P('barrel0', 18, 18, 'G')
+    P('barrel2', 1, 1, 'G'); P('pap', 16, 0, 'G'); P('barrel2', 18, 1, 'G'); P('barrel0', 1, 18, 'G'); P('barrel0', 18, 18, 'G')
     for x in range(2, 18):
         if x % 8 not in (0, 1) and (x < 8 or x > 12):
             pass
@@ -289,6 +293,24 @@ def build(ts):
         for i in range(3):
             L.swaps.append((gx + i, gy + j, off[j][i], on[j][i]))
 
+    # PACK-A-PUNCH machine (Generator Room, needs power) and the MYSTERY BOX (Cargo Bay)
+    prx, pry, _, _ = L.room_rect('G')
+    pgx, pgy = prx + 16, pry
+    add_interact(IK_PAP, 0, 3000, pgx, pgy, 2, 3, margin_px=10)
+    pon = ts.add_block(A.obj_pap(True)); poff = ts.add_block(A.obj_pap(False))
+    for j in range(3):
+        for i in range(2):
+            L.swaps.append((pgx + i, pgy + j, poff[j][i], pon[j][i]))
+    L.perk_sites = [(pgx, pgy)]
+    brx, bry, _, _ = L.room_rect('C')
+    bgx, bgy = brx + 8, bry + 15
+    add_interact(IK_BOX, 0, 950, bgx, bgy, 2, 2, margin_px=10)
+    bopen = ts.add_block(A.obj_mystery_box(True)); bclosed = ts.add_block(A.obj_mystery_box(False))
+    L.box_cells = []
+    for j in range(2):
+        for i in range(2):
+            L.box_cells.append((bgx + i, bgy + j, bclosed[j][i], bopen[j][i]))
+
     # perks
     perk_defs = [('QUICK HANDS', 'E', 12, 1000), ('SECOND WIND', 'C', 15, 1500), ('STEADY AIM', 'S', 14, 1500),
                  ('FIELD MEDIC', 'SO', 1, 1250), ('IRON HEART', 'MS', 0, 2000)]
@@ -304,7 +326,7 @@ def build(ts):
                 raise
             gx2, gy2 = rx + lx, ry
         L.mini[gy2][gx2] = 7; L.mini[gy2][gx2 + 1] = 7
-        L.perk_sites = getattr(L, 'perk_sites', []) + [(gx2, gy2)]
+        L.perk_sites = L.perk_sites + [(gx2, gy2)]
         pid = PERKS.index(pname)
         add_interact(IK_PERK, pid, cost, gx2, gy2, 2, 3, margin_px=10)
         main, light = A.PERK_COLORS[pname]
@@ -701,6 +723,11 @@ def emit_c(L, entries, path, ids_path):
                                                      on[0] | (on[1] << 12) if isinstance(on, tuple) else on))
     lines.append('};')
     lines.append('')
+    lines.append('const PowerSwap map_box_cells[NUM_BOX_CELLS] = {')
+    for (x, y, closed, opened) in L.box_cells:
+        lines.append('    { %d, 0x%04X, 0x%04X },' % (y * W + x, closed[0] | (closed[1] << 12), opened[0] | (opened[1] << 12)))
+    lines.append('};')
+    lines.append('')
     lines.append('const SpawnPoint map_spawns[NUM_SPAWNS] = {')
     for (x, y, a) in L.spawns:
         lines.append('    { %d, %d, %d },' % (x, y, a))
@@ -723,6 +750,7 @@ def emit_c(L, entries, path, ids_path):
         f.write('/* GENERATED - map constants */\n#ifndef MAP_IDS_H\n#define MAP_IDS_H\n')
         f.write('#define NUM_DOORS %d\n#define NUM_DOOR_CELLS %d\n#define NUM_INTERACTS %d\n' %
                 (len(L.doors), len(L.door_cells), len(L.interacts)))
+        f.write('#define NUM_BOX_CELLS %d\n' % len(L.box_cells))
         f.write('#define NUM_SWAPS %d\n#define NUM_SPAWNS %d\n#define NUM_AREAS %d\n#define NUM_NOTES %d\n' %
                 (len(L.swaps), len(L.spawns), len(AREA_NAMES), len(NOTES)))
         for k, v in AREA.items():

@@ -21,6 +21,7 @@
 #include "hud.h"
 #include "perks.h"
 #include "interact.h"
+#include "mystery.h"
 
 typedef enum {
     ST_TITLE, ST_MENU, ST_PLAYING, ST_ROUND_START, ST_ROUND_COMPLETE, ST_PAUSED,

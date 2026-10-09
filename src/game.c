@@ -31,6 +31,7 @@ void World_Reset(void)
     Enemies_Init();
     Player_Init();
     Interact_Reset();
+    Box_Reset();
     Rounds_Reset();
     G.score = 0; G.kills = 0; G.play_frames = 0;
     G.score_gain = G.score_gain_t = 0;
@@ -106,6 +107,7 @@ void World_Update(int running)
     PROF_BEGIN(PF_BULLET);
     Bullets_Update();
     Pickups_Update();
+    Box_Update();
     PROF_END(PF_BULLET);
     int ptx = player.x >> 11, pty = player.y >> 11;
     PROF_BEGIN(PF_NAV);
@@ -194,6 +196,10 @@ static void update_play(void)
             if (G.score > 0) Hud_Message("BOT SHOPPED", 0, HC_GRAY, 30);
         }
     }
+#endif
+#ifdef BOT_ARSENAL
+    if (G.state_frame % 240 == 5) { Weapon_Give(&player, (G.state_frame / 240) % W_COUNT); if ((G.state_frame / 240) % 2) Weapon_Punch(&player); }
+    if (G.state_frame % 60 == 0) Weapon_FillAmmo(&player);
 #endif
 #ifdef BOT_PICKUPS
     if (G.state_frame == 200) for (int i = 0; i < PU_COUNT; i++) Pickups_Spawn(i, (player.x >> 8) - 50 + i * 20, (player.y >> 8) - 30);

@@ -76,6 +76,22 @@ static void activate(int zone)
         Hud_Message(map_notes[z->id], 0, HC_WHITE, 360);
         Audio_PlaySfx(SFX_NOTE);
         break;
+    case IK_BOX:
+        Box_Use();
+        break;
+    case IK_PAP: {
+        WeaponSlot *s = &player.wpn[player.cur];
+        if (!power_on) { deny("POWER REQUIRED", "ACTIVATE THE GENERATOR"); return; }
+        if (s->pap) { deny("ALREADY UPGRADED", weapon_defs[s->id].name); return; }
+        if (G.score < z->cost) { deny("NOT ENOUGH POINTS", "PACK-A-PUNCH"); return; }
+        G.score -= z->cost;
+        Weapon_Punch(&player);
+        Audio_PlaySfx(SFX_PAP);
+        Fx_Flash(10);
+        Fx_Shake(8);
+        Hud_Message("PACK-A-PUNCH", weapon_defs[s->id].name, HC_CYAN, 150);
+        break;
+    }
     }
 }
 
@@ -83,7 +99,8 @@ void Interact_Hold(int zone)
 {
     if (locked) return;
     const Interact *z = &map_interacts[zone];
-    hold_frames = (z->kind == IK_GEN) ? 90 : (z->kind == IK_NOTE ? 10 : 28);
+    if (z->kind == IK_BOX && Box_State() == BOX_ROLLING) return;
+    hold_frames = (z->kind == IK_GEN) ? 90 : (z->kind == IK_NOTE ? 10 : (z->kind == IK_BOX ? 16 : 28));
     int add = (100 + hold_frames - 1) / hold_frames;
     int p = interact_progress + add;
     if (p >= 100) {
@@ -132,6 +149,17 @@ void Interact_Draw(int zone)
     }
     case IK_NOTE:
         l1 = "HOLD B  READ"; l2 = "TERMINAL"; cost = 0;
+        break;
+    case IK_BOX:
+        l2 = "MYSTERY BOX";
+        if (Box_State() == BOX_ROLLING) { l1 = "GOOD LUCK..."; cost = 0; c1 = HC_CYAN; }
+        else if (Box_State() == BOX_READY) { l1 = "HOLD B  TAKE"; l2 = weapon_defs[Box_Shown()].name; cost = 0; c1 = HC_GREEN; }
+        else l1 = "HOLD B  OPEN";
+        break;
+    case IK_PAP:
+        l2 = "PACK-A-PUNCH"; need_power = !power_on;
+        if (player.wpn[player.cur].pap) { l1 = "ALREADY UPGRADED"; cost = 0; c1 = HC_GRAY; }
+        else l1 = "HOLD B  UPGRADE";
         break;
     }
     if (need_power) { l1 = "POWER REQUIRED"; c1 = HC_RED; }

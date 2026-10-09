@@ -15,13 +15,32 @@ const WeaponDef weapon_defs[W_COUNT] = {
     { "HEAVY RIFLE",    95, 28,  8,  56, 88,  1,  96, 280, 3, 1, WK_BULLET, 2, 1250, SFX_SHOT_RIFLE   },
     { "ARC LAUNCHER",   55, 34,  6,  36, 96,  2,  44, 170, 1, 1, WK_ARC,    2, 2250, SFX_SHOT_ARC     },
     { "RAY GUN",        42, 9,  20,  60, 110, 0, 112, 230, 99, 1, WK_RAY,   0, 3000, SFX_SHOT_RAY     },
+    /* ---- mystery box only ---- */
+    { "HAND CANNON",    70, 26,  6,  42,  80,  2,  80, 220, 2, 1, WK_BULLET,    2, 0, SFX_SHOT_RIFLE   },
+    { "TWIN-9",         14,  6, 24, 144,  60,  7,  66, 150, 1, 1, WK_BULLET,    0, 0, SFX_SHOT_PISTOL  },
+    { "BUZZSAW",         8,  2, 90, 360, 130, 14,  64, 130, 1, 1, WK_BULLET,    0, 0, SFX_SHOT_SMG     },
+    { "BLAST TUBE",    110, 52,  3,  18, 100,  1,  40, 200, 1, 1, WK_EXPLOSIVE, 4, 0, SFX_SHOT_BLAST   },
+    { "EMBER THROWER",   7,  2, 60, 240, 100, 10,  34,  62, 99, 1, WK_FLAME,    0, 0, SFX_SHOT_FLAME   },
+    { "BOUNCER",        30, 10, 16,  96,  70,  3,  60, 380, 1, 1, WK_BOUNCE,    0, 0, SFX_SHOT_RAY     },
+    { "LONGSHOT",      150, 46,  5,  30, 100,  0, 128, 420, 4, 1, WK_BULLET,    3, 0, SFX_SHOT_RIFLE   },
 };
+
+int Weapon_MagSize(const WeaponSlot *s) { int m = weapon_defs[s->id].mag; return s->pap ? m + m / 2 : m; }
+int Weapon_ReserveMax(const WeaponSlot *s) { int m = weapon_defs[s->id].reserve_max; return s->pap ? m + m / 2 : m; }
+int Weapon_Damage(const WeaponSlot *s) { int d = weapon_defs[s->id].dmg; return s->pap ? d * 2 : d; }
+
+int Weapon_Owns(const Player *p, int id)
+{
+    return p->wpn[0].id == id || p->wpn[1].id == id;
+}
 
 void Weapon_Reset(Player *p)
 {
     p->wpn[0].id = W_SERVICE9;
     p->wpn[0].mag = weapon_defs[W_SERVICE9].mag;
     p->wpn[0].reserve = 96;
+    p->wpn[0].pap = 0;
+    p->wpn[1].pap = 0;
     p->wpn[1].id = 255;
     p->wpn[1].mag = 0;
     p->wpn[1].reserve = 0;
@@ -37,8 +56,18 @@ int Weapon_AmmoPrice(int id)
 
 static void fill_slot(WeaponSlot *s)
 {
-    s->mag = weapon_defs[s->id].mag;
-    s->reserve = weapon_defs[s->id].reserve_max;
+    s->mag = (u8)Weapon_MagSize(s);
+    s->reserve = (u16)Weapon_ReserveMax(s);
+}
+
+int Weapon_Punch(Player *p)
+{
+    WeaponSlot *s = &p->wpn[p->cur];
+    if (s->pap) return 0;
+    s->pap = 1;
+    fill_slot(s);
+    p->reload_t = 0;
+    return 1;
 }
 
 int Weapon_Give(Player *p, int id)
@@ -49,6 +78,7 @@ int Weapon_Give(Player *p, int id)
     }
     int slot = (p->wpn[1].id == 255) ? 1 : p->cur;
     p->wpn[slot].id = (u8)id;
+    p->wpn[slot].pap = 0;
     fill_slot(&p->wpn[slot]);
     p->cur = (u8)slot;
     p->reload_t = 0;
@@ -76,7 +106,7 @@ void Weapon_StartReload(Player *p)
 {
     WeaponSlot *s = &p->wpn[p->cur];
     const WeaponDef *w = &weapon_defs[s->id];
-    if (p->reload_t || s->mag >= w->mag || s->reserve == 0) return;
+    if (p->reload_t || s->mag >= Weapon_MagSize(s) || s->reserve == 0) return;
     int t = w->reload;
     if (p->perks & (1 << PERK_QUICK_HANDS)) t = (t * 6) / 10;
     p->reload_t = (u16)t;
@@ -93,8 +123,7 @@ void Weapon_Update(Player *p)
         p->reload_t--;
         if (p->reload_t == 0) {
             WeaponSlot *s = &p->wpn[p->cur];
-            const WeaponDef *w = &weapon_defs[s->id];
-            int need = w->mag - s->mag;
+            int need = Weapon_MagSize(s) - s->mag;
             int mv = need < s->reserve ? need : s->reserve;
             s->mag = (u8)(s->mag + mv);
             s->reserve = (u16)(s->reserve - mv);
@@ -118,17 +147,28 @@ int Weapon_TryFire(Player *p)
     }
     s->mag--;
     int delay = w->delay;
+    if (s->pap) delay = (delay * 85) / 100 ? (delay * 85) / 100 : 1;
     if (p->overdrive_t) delay = (delay + 1) >> 1;
+    if (delay < 1) delay = 1;
     p->fire_cd = (u16)delay;
     int spread = w->spread;
     if (p->perks & (1 << PERK_STEADY_AIM)) spread >>= 1;
     int ang = p->aim;
     s32 mx = p->x + ((Cos((u8)ang) * 9) );
     s32 my = p->y + ((Sin((u8)ang) * 7)) - TO_FX(9);
-    int type = (w->kind == WK_ARC) ? BT_ARC : (w->kind == WK_RAY ? BT_RAY : (w->pellets > 1 ? BT_PELLET : BT_BULLET));
+    int type = BT_BULLET;
+    switch (w->kind) {
+    case WK_ARC: type = BT_ARC; break;
+    case WK_RAY: type = BT_RAY; break;
+    case WK_EXPLOSIVE: type = BT_ROCKET; break;
+    case WK_FLAME: type = BT_FLAME; break;
+    case WK_BOUNCE: type = BT_BOUNCE; break;
+    default: type = w->pellets > 1 ? BT_PELLET : BT_BULLET; break;
+    }
+    int dmg = Weapon_Damage(s);
     for (int i = 0; i < w->pellets; i++) {
         int a = ang + (spread ? RandSigned(spread) : 0);
-        Bullets_Spawn(mx, my + TO_FX(9), (u8)a, w->speed16, w->dmg, w->pierce, w->range, type);
+        Bullets_Spawn(mx, my + TO_FX(9), (u8)a, w->speed16, dmg, w->pierce, w->range, type);
     }
     Fx_Spawn(FXK_MUZZLE, mx >> 8, (my >> 8), 0, 0, 4);
     Audio_PlaySfx(w->sfx);

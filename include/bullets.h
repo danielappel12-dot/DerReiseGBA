@@ -5,10 +5,10 @@
 #define MAX_BULLETS  32
 #define MAX_EBULLETS 12
 
-enum { BT_BULLET, BT_PELLET, BT_ARC, BT_RAY };
+enum { BT_BULLET, BT_PELLET, BT_ARC, BT_RAY, BT_ROCKET, BT_FLAME, BT_BOUNCE };
 
 typedef struct {
-    u8  active, type, pierce, hit_mask_dummy;
+    u8  active, type, pierce, bounces;
     s32 x, y;               /* 8.8 */
     s16 vx, vy;             /* 8.8 px / frame */
     s16 life;

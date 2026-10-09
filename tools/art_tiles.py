@@ -674,3 +674,56 @@ def anim_conveyor(frame):
                 c.px(x, y, col(b, 1))
     c.hline(0, 0, 8, col(b, 4)); c.hline(0, 7, 8, col(b, 4))
     return c
+
+
+def obj_mystery_box(open_=False):
+    """MYSTERY BOX: steel chest with a glowing question mark; open = lid up + light beam (16x16)"""
+    b = 1
+    c = Canvas(16, 16)
+    # body
+    c.rect(1, 7, 14, 9, col(b, 3)); c.frame(1, 7, 14, 9, col(b, 1))
+    c.hline(2, 8, 12, col(b, 4)); c.hline(2, 14, 12, col(b, 2))
+    c.rect(1, 10, 14, 2, col(b, 6)); c.hline(1, 10, 14, col(b, 5)); c.hline(1, 11, 14, col(b, 6))
+    c.rect(7, 9, 2, 5, col(b, 7)); c.px(7, 11, col(b, 1)); c.px(8, 11, col(b, 1))     # latch
+    if not open_:
+        c.rect(1, 3, 14, 5, col(b, 4)); c.frame(1, 3, 14, 5, col(b, 1))
+        c.hline(2, 4, 12, col(b, 14)); c.hline(2, 7, 12, col(b, 2))
+        # glowing question mark on the lid
+        for (x, y) in [(6, 4), (7, 4), (8, 4), (9, 5), (9, 6), (8, 6), (7, 6)]:
+            pass
+        c.px(6, 5, col(b, 10)); c.px(7, 4, col(b, 10)); c.px(8, 4, col(b, 10)); c.px(9, 5, col(b, 10))
+        c.px(8, 6, col(b, 10)); c.px(7, 6, col(b, 10)); c.px(7, 7, col(b, 10))
+    else:
+        # lid tilted up behind the box, light pouring out
+        c.rect(2, 0, 12, 3, col(b, 4)); c.frame(2, 0, 12, 3, col(b, 1))
+        c.rect(3, 3, 10, 4, col(b, 7)); c.rect(5, 3, 6, 4, col(b, 14))
+        c.hline(4, 3, 8, col(b, 14))
+    return c
+
+
+def obj_pap(on=True):
+    """PACK-A-PUNCH machine 16x24: blue energy press with a hazard base"""
+    b = 1
+    c = Canvas(16, 24)
+    c.rect(1, 0, 14, 24, col(b, 2)); c.frame(1, 0, 14, 24, col(b, 1))
+    c.hline(2, 1, 12, col(b, 4))
+    # header sign
+    c.rect(3, 2, 10, 4, col(b, 10) if on else col(b, 3)); c.frame(3, 2, 10, 4, col(b, 1))
+    if on:
+        c.hline(4, 3, 8, col(b, 14)); c.px(5, 4, col(b, 11)); c.px(8, 4, col(b, 11)); c.px(10, 4, col(b, 11))
+    # press piston
+    c.rect(6, 7, 4, 5, col(b, 4)); c.frame(6, 7, 4, 5, col(b, 1)); c.hline(7, 8, 2, col(b, 14) if on else col(b, 3))
+    # forging chamber
+    c.rect(3, 12, 10, 6, col(b, 1))
+    if on:
+        c.rect(4, 13, 8, 4, col(b, 11)); c.rect(5, 14, 6, 2, col(b, 10)); c.px(7, 14, col(b, 14)); c.px(8, 15, col(b, 14))
+    else:
+        c.rect(4, 13, 8, 4, col(b, 2))
+    # controls
+    c.rect(3, 19, 4, 3, col(b, 3)); c.px(4, 20, col(b, 7) if on else col(b, 1)); c.px(5, 20, col(b, 12) if on else col(b, 1))
+    c.rect(9, 19, 4, 3, col(b, 1)); c.hline(10, 20, 2, col(b, 10) if on else col(b, 3))
+    # hazard base
+    for x in range(2, 14):
+        if (x // 2) % 2 == 0:
+            c.px(x, 23, col(b, 7))
+    return c

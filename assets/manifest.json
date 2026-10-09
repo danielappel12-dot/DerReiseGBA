@@ -164,7 +164,7 @@
    "fw": 8,
    "fh": 8,
    "cols": 16,
-   "count": 27,
+   "count": 30,
    "names": [
     "FX_BULLET",
     "FX_BULLET_BIG",
@@ -187,6 +187,9 @@
     "FX_ARROW_DR",
     "FX_ARROW_D",
     "FX_MINIGEN",
+    "FX_ROCKET",
+    "FX_FLAME_0",
+    "FX_FLAME_1",
     "FX_RETICLE",
     "FX_MINIDOT",
     "FX_DMG_U",
@@ -201,7 +204,7 @@
    "fw": 16,
    "fh": 16,
    "cols": 8,
-   "count": 20,
+   "count": 33,
    "names": [
     "FX_MUZZLE_0",
     "FX_MUZZLE_1",
@@ -218,6 +221,19 @@
     "FX_PU_RESTORE",
     "FX_PU_NUKE",
     "FX_PU_INSTA",
+    "FX_WICON_0",
+    "FX_WICON_1",
+    "FX_WICON_2",
+    "FX_WICON_3",
+    "FX_WICON_4",
+    "FX_WICON_5",
+    "FX_WICON_6",
+    "FX_WICON_7",
+    "FX_WICON_8",
+    "FX_WICON_9",
+    "FX_WICON_10",
+    "FX_WICON_11",
+    "FX_WICON_12",
     "FX_PERK_ICON_IRON",
     "FX_PERK_ICON_QUICK",
     "FX_PERK_ICON_STEADY",
@@ -251,7 +267,7 @@
  "bg": {
   "env": {
    "png": "assets/tiles/env.png",
-   "count": 266,
+   "count": 284,
    "cols": 16
   },
   "anim": {

@@ -116,6 +116,22 @@ static void draw_pointer(void)
     Spr_Add(ex - 4, ey - 4, SZ_8x8, tiles[frame_of[oct]], OP_FX, 0, flip_of[oct]);
 }
 
+static void draw_box_weapon(void)
+{
+    if (Box_State() == BOX_IDLE) return;
+    for (int i = 0; i < NUM_INTERACTS; i++) {
+        const Interact *z = &map_interacts[i];
+        if (z->kind != IK_BOX) continue;
+        int cx = z->x + z->w / 2 - cam_x, top = z->y + 10 - cam_y;
+        if (cx < -16 || cx > SCREEN_W + 16 || top < -30 || top > SCREEN_H + 30) return;
+        int bob = (Sin((u8)(G.frame * 6)) * 2) >> 8;
+        int blink = (Box_State() == BOX_READY && G.frame % 420 > 0) ? 0 : 0;
+        (void)blink;
+        Spr_Add(cx - 8, top - 22 + bob, SZ_16x16, SPR_FX_WICON_0 + Box_Shown() * 4, OP_MISC, 1, 0);
+        return;
+    }
+}
+
 static void draw_perk_gems(void)
 {
     if (!power_on) return;
@@ -145,6 +161,7 @@ void World_Render(void)
     }
 
     draw_perk_gems();
+    draw_box_weapon();
 
     /* ---- reticle on the current target */
     if (player.target >= 0 && player.state == PS_ALIVE) {
@@ -192,6 +209,9 @@ void World_Render(void)
         if (b->type == BT_ARC) tile = SPR_FX_BULLET_ARC;
         else if (b->type == BT_RAY) tile = SPR_FX_RAY;
         else if (b->type == BT_PELLET) tile = SPR_FX_BULLET;
+        else if (b->type == BT_ROCKET) tile = SPR_FX_ROCKET;
+        else if (b->type == BT_FLAME) tile = SPR_FX_FLAME_0 + ((b->life >> 2) & 1);
+        else if (b->type == BT_BOUNCE) tile = SPR_FX_BULLET_BIG;
         else if (b->dmg >= 60) tile = SPR_FX_BULLET_BIG;
         Spr_Add((b->x >> 8) - 4 - cam_x, (b->y >> 8) - 12 - cam_y, SZ_8x8, tile, OP_FX, 1, 0);
     }

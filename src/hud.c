@@ -182,16 +182,22 @@ void Hud_Game(void)
     /* ---- bottom right: weapon + ammo */
     WeaponSlot *s = &p->wpn[p->cur];
     const WeaponDef *w = &weapon_defs[s->id];
-    int n = strlen_(w->name);
-    Hud_Text(30 - n, 18, w->name, HC_WHITE);
+    char nbuf[20];
+    {   /* Pack-a-Punched weapons are shown in cyan with a '+' */
+        int k = 0;
+        for (const char *q = w->name; *q; q++) nbuf[k++] = *q;
+        if (s->pap) nbuf[k++] = '+';
+        nbuf[k] = 0;
+        Hud_Text(30 - k, 18, nbuf, s->pap ? HC_CYAN : HC_WHITE);
+    }
     if (s->mag == 0 && s->reserve == 0) {
         if ((G.frame >> 2) & 1) Hud_Text(24, 19, "EMPTY", HC_RED);
         else Hud_Text(24, 19, "EMPTY", HC_ORANGE);
     } else {
         int amp = HC_WHITE;
         if (p->empty_flash && ((G.frame >> 2) & 1)) amp = HC_RED;
-        else if (s->mag <= w->mag / 4) amp = HC_ORANGE;
-        Hud_Num(22, 19, s->mag, 2, amp, '0');
+        else if (s->mag <= Weapon_MagSize(s) / 4) amp = HC_ORANGE;
+        Hud_Num(21, 19, s->mag, 3, amp, '0');
         Hud_Text(24, 19, "/", HC_GRAY);
         Hud_Num(25, 19, s->reserve, 3, HC_GRAY, '0');
         Hud_Tile(29, 19, UI_ICON_BULLET, HC_YELLOW);
@@ -205,8 +211,11 @@ void Hud_Game(void)
     }
     if (p->wpn[p->cur ^ 1].id != 255) {
         const char *nm = weapon_defs[p->wpn[p->cur ^ 1].id].name;
-        int nl = strlen_(nm);
-        if (!p->reload_t) { Hud_Text(30 - nl - 2, 17, "L:", HC_GRAY); Hud_Text(30 - nl, 17, nm, HC_GRAY); }
+        int nl = strlen_(nm) + (p->wpn[p->cur ^ 1].pap ? 1 : 0);
+        if (!p->reload_t) {
+            Hud_Text(30 - nl - 2, 17, "L:", HC_GRAY); Hud_Text(30 - nl, 17, nm, HC_GRAY);
+            if (p->wpn[p->cur ^ 1].pap) Hud_Text(29, 17, "+", HC_CYAN);
+        }
     }
 
     /* ---- bonus kill feedback */

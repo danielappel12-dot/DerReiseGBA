@@ -18,7 +18,7 @@ typedef struct { u8 kind; u8 id; u16 cost; s16 x, y, w, h; } Interact;
 typedef struct { u16 idx; u16 off; u16 on; } PowerSwap;
 typedef struct { u8 x, y, area; } SpawnPoint;
 
-enum { IK_DOOR, IK_GEN, IK_PERK, IK_WEAPON, IK_NOTE };
+enum { IK_DOOR, IK_GEN, IK_PERK, IK_WEAPON, IK_NOTE, IK_BOX, IK_PAP };
 
 extern const u16 map_entries[MAP_W * MAP_H];
 extern const u8 map_flags_rom[MAP_W * MAP_H];
@@ -28,6 +28,7 @@ extern const DoorDef map_doors[NUM_DOORS];
 extern const DoorCell map_door_cells[NUM_DOOR_CELLS];
 extern const Interact map_interacts[NUM_INTERACTS];
 extern const PowerSwap map_swaps[NUM_SWAPS];
+extern const PowerSwap map_box_cells[NUM_BOX_CELLS];   /* off = closed, on = open */
 extern const SpawnPoint map_spawns[NUM_SPAWNS];
 extern const char *const map_area_names[NUM_AREAS];
 extern const char *const map_notes[NUM_NOTES];

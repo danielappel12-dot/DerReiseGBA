@@ -21,7 +21,7 @@ EMU     ?= mgba
 
 ifeq ($(BOT),1)
 TARGET  := nightfall_bot
-DEFS    := -DDEBUG=1 -DBOT=1 $(if $(BOTWAVE),-DBOT_WAVE=$(BOTWAVE)) $(if $(BOTENEMY),-DBOT_ENEMY=$(BOTENEMY)) $(if $(BOTQUIET),-DBOT_QUIET=1) $(if $(BOTSMART),-DBOT_SMART=1) $(if $(BOTPICKUPS),-DBOT_PICKUPS=1)
+DEFS    := -DDEBUG=1 -DBOT=1 $(if $(BOTWAVE),-DBOT_WAVE=$(BOTWAVE)) $(if $(BOTENEMY),-DBOT_ENEMY=$(BOTENEMY)) $(if $(BOTQUIET),-DBOT_QUIET=1) $(if $(BOTSMART),-DBOT_SMART=1) $(if $(BOTPICKUPS),-DBOT_PICKUPS=1) $(if $(BOTARSENAL),-DBOT_ARSENAL=1)
 OPT     := -O2
 else ifeq ($(DEBUG),1)
 TARGET  := nightfall_debug
@@ -76,7 +76,6 @@ $(BUILD)/%.o: %.s
 
 assets:
 	$(PYTHON) tools/gen_assets.py
-	$(PYTHON) tools/gen_map.py
 	$(PYTHON) tools/gen_audio.py
 	$(PYTHON) tools/audio_preview.py
 

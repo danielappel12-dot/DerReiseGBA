@@ -3,8 +3,9 @@
 #define MAP_IDS_H
 #define NUM_DOORS 7
 #define NUM_DOOR_CELLS 42
-#define NUM_INTERACTS 25
-#define NUM_SWAPS 57
+#define NUM_INTERACTS 27
+#define NUM_BOX_CELLS 4
+#define NUM_SWAPS 63
 #define NUM_SPAWNS 44
 #define NUM_AREAS 9
 #define NUM_NOTES 7
