@@ -148,6 +148,17 @@ void Hud_Game(void)
     Player *p = &player;
     draw_score_block();
 
+    /* ---- objective: find / activate the generator until the power is on */
+    {
+        int ox, oy, oc; const char *lab;
+        if (Objective_Get(&ox, &oy, &lab, &oc) && p->state == PS_ALIVE) {
+            int pal = ((G.frame >> 4) & 1) ? HC_YELLOW : HC_ORANGE;
+            Hud_Text(9, 1, "POWER OFF", HC_RED);
+            Hud_Text(9, 2, lab, pal);
+            if (oc > 0) Hud_Num(9 + strlen_(lab) + 1, 2, oc, 4, pal, ' ');
+        }
+    }
+
     /* ---- top right: enemies left (when the minimap is hidden) */
     if (!G.show_map) {
         Hud_Text(21, 0, "ZOMBIES", HC_GRAY);
@@ -204,7 +215,7 @@ void Hud_Game(void)
     }
 
     /* ---- power-up timers (top centre) */
-    int row = 2;
+    int row = 3;
     if (p->overdrive_t) { Hud_Text(0, row, "OVERDRIVE", HC_ORANGE); Hud_Num(10, row, p->overdrive_t / 60 + 1, 2, HC_ORANGE, ' '); row++; }
     if (p->double_t)    { Hud_Text(0, row, "DOUBLE SCORE", HC_YELLOW); Hud_Num(13, row, p->double_t / 60 + 1, 2, HC_YELLOW, ' '); row++; }
     if (!power_on && !G.show_map) { /* nothing */ }

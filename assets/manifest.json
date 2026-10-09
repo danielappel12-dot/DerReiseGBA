@@ -164,7 +164,7 @@
    "fw": 8,
    "fh": 8,
    "cols": 16,
-   "count": 23,
+   "count": 27,
    "names": [
     "FX_BULLET",
     "FX_BULLET_BIG",
@@ -183,6 +183,10 @@
     "FX_PUFF_2",
     "FX_ARC_0",
     "FX_ARC_1",
+    "FX_ARROW_R",
+    "FX_ARROW_DR",
+    "FX_ARROW_D",
+    "FX_MINIGEN",
     "FX_RETICLE",
     "FX_MINIDOT",
     "FX_DMG_U",
@@ -197,7 +201,7 @@
    "fw": 16,
    "fh": 16,
    "cols": 8,
-   "count": 14,
+   "count": 19,
    "names": [
     "FX_MUZZLE_0",
     "FX_MUZZLE_1",
@@ -212,7 +216,12 @@
     "FX_PU_OVERDRIVE",
     "FX_PU_DOUBLE",
     "FX_PU_RESTORE",
-    "FX_PU_CLEAR"
+    "FX_PU_CLEAR",
+    "FX_PERK_ICON_IRON",
+    "FX_PERK_ICON_QUICK",
+    "FX_PERK_ICON_STEADY",
+    "FX_PERK_ICON_SECOND",
+    "FX_PERK_ICON_FIELD"
    ]
   },
   {

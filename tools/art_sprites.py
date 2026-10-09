@@ -568,6 +568,29 @@ def fx8():
             c.line(p[0], p[1], q[0], q[1], C(b, 8))
         c.px(3, 2 + i * 3, C(b, 11))
         add('ARC_%d' % i, c)
+    # objective pointer arrows (yellow): right, down-right, down; other directions are flips
+    Y, YD = C(b, 15), C(b, 4)
+    c = Canvas(8, 8)
+    c.rect(0, 3, 4, 2, Y)
+    for i in range(3):
+        c.vline(4 + i, 1 + i, 6 - 2 * i, Y)
+    c.hline(0, 4, 4, YD)
+    c.outline(C(b, 1)); add('ARROW_R', c)
+    c = Canvas(8, 8)
+    for i in range(6):
+        c.px(i, i, Y); c.px(i + 1, i, Y); c.px(i, i + 1, YD)
+    for y in range(8):
+        for x in range(8):
+            if x + y >= 10:
+                c.px(x, y, Y)
+    c.outline(C(b, 1)); add('ARROW_DR', c)
+    c = Canvas(8, 8)
+    c.rect(3, 0, 2, 4, Y)
+    for i in range(3):
+        c.hline(1 + i, 4 + i, 6 - 2 * i, Y)
+    c.vline(4, 0, 4, YD)
+    c.outline(C(b, 1)); add('ARROW_D', c)
+    c = Canvas(8, 8); c.rect(1, 1, 6, 6, C(b, 15)); c.rect(2, 2, 4, 4, C(b, 2)); c.outline(C(b, 5)); add('MINIGEN', c)
     # aim reticle
     c = Canvas(8, 8)
     for (x, y) in [(0, 3), (0, 4), (7, 3), (7, 4), (3, 0), (4, 0), (3, 7), (4, 7)]:
@@ -664,7 +687,23 @@ def fx16():
     c.ellipse(8, 7, 3, 2.8, C(bm, 12)); c.rect(6, 9, 5, 3, C(bm, 12))
     c.rect(6, 6, 2, 2, C(bm, 15)); c.rect(9, 6, 2, 2, C(bm, 15)); c.px(8, 9, C(bm, 15))
     add('PU_CLEAR', finish(c, 1, bm))
-    # perk icon / generic gift: not needed
+    # perk gems, one colour per perk (IRON HEART red, QUICK HANDS yellow, STEADY AIM cyan, SECOND WIND green, FIELD MEDIC orange)
+    for nm, main, dark in (('IRON', 10, 11), ('QUICK', 4, 5), ('STEADY', 6, 7), ('SECOND', 8, 9), ('FIELD', 2, 3)):
+        c = Canvas(16, 16)
+        for y in range(16):
+            half = 7 - abs(y - 7) if y <= 7 else 7 - abs(y - 8)
+            half = max(0, min(6, half))
+            for x in range(8 - half, 8 + half):
+                c.px(x, y, C(bm, main) if (x + y) % 5 else C(bm, 12))
+        for y in range(8, 15):
+            half = 14 - y
+            for x in range(8 - half, 8 + half):
+                if x >= 8:
+                    c.px(x, y, C(bm, dark))
+        c.px(6, 4, C(bm, 12)); c.px(7, 3, C(bm, 12)); c.px(5, 5, C(bm, 12))
+        c = finish(c, 1, bm)
+        c.px(2, 1, C(bm, 12)); c.px(1, 2, C(bm, 12)); c.px(2, 2, C(bm, 12)); c.px(3, 2, C(bm, 12)); c.px(2, 3, C(bm, 12))
+        add('PERK_ICON_' + nm, c)
     # corpses are produced elsewhere
     return out
 

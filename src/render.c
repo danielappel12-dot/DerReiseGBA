@@ -88,6 +88,49 @@ static void sort_items(DrawItem *a, int n)
     }
 }
 
+
+/* ---- objective pointer (generator / its door) and perk gems ------------------------------ */
+static void draw_pointer(void)
+{
+    int wx, wy, cost; const char *lab;
+    if (player.state != PS_ALIVE || !Objective_Get(&wx, &wy, &lab, &cost)) return;
+    int sx = wx - cam_x, sy = wy - cam_y;
+    int bob = (Sin((u8)(G.frame * 8)) * 3) >> 8;
+    if (sx > 14 && sx < SCREEN_W - 14 && sy > 22 && sy < SCREEN_H - 14) {
+        /* target on screen: bouncing arrow above it */
+        Spr_Add(sx - 4, sy - 24 + bob, SZ_8x8, SPR_FX_ARROW_D, OP_FX, 0, 0);
+        return;
+    }
+    /* off screen: arrow on the screen border pointing toward it */
+    int dx = wx - (player.x >> 8), dy = wy - ((player.y >> 8) - 8);
+    int ax = ABS(dx), ay = ABS(dy);
+    int cx = SCREEN_W / 2, cy = SCREEN_H / 2 - 4;
+    int mx = cx - 14, my = cy - 14;
+    int t_num = 1, t_den = 1;
+    if (ax * my > ay * mx) { t_num = mx; t_den = ax ? ax : 1; } else { t_num = my; t_den = ay ? ay : 1; }
+    int ex = cx + dx * t_num / t_den, ey = cy + dy * t_num / t_den;
+    int oct = ((Atan2(dy, dx) + 16) >> 5) & 7;
+    static const u8 frame_of[8] = { 0, 1, 2, 1, 0, 1, 2, 1 };
+    static const u8 flip_of[8]  = { 0, 0, 0, SPR_HFLIP, SPR_HFLIP, SPR_HFLIP | SPR_VFLIP, SPR_VFLIP, SPR_VFLIP };
+    static const u16 tiles[3] = { SPR_FX_ARROW_R, SPR_FX_ARROW_DR, SPR_FX_ARROW_D };
+    Spr_Add(ex - 4, ey - 4, SZ_8x8, tiles[frame_of[oct]], OP_FX, 0, flip_of[oct]);
+}
+
+static void draw_perk_gems(void)
+{
+    if (!power_on) return;
+    for (int i = 0; i < NUM_INTERACTS; i++) {
+        const Interact *z = &map_interacts[i];
+        if (z->kind != IK_PERK || (player.perks & (1 << z->id))) continue;
+        int cx = z->x + z->w / 2 - cam_x, cy = z->y + 10 - cam_y;      /* zone starts 10 px above the machine */
+        if (cx < -16 || cx > SCREEN_W + 16 || cy < -20 || cy > SCREEN_H + 20) continue;
+        int afford = G.score >= z->cost;
+        int bob = (Sin((u8)(G.frame * (afford ? 10 : 5) + z->id * 40)) * 3) >> 8;
+        if (!afford && ((G.frame >> 3) & 3) == 3) continue;                 /* dim blink when unaffordable */
+        Spr_Add(cx - 8, cy - 14 + bob, SZ_16x16, SPR_FX_PERK_ICON_IRON + z->id * 4, OP_MISC, 1, 0);
+    }
+}
+
 void World_Render(void)
 {
     Spr_Begin();
@@ -97,12 +140,19 @@ void World_Render(void)
         int tx = player.x >> 11, ty = player.y >> 11;   /* /8 tile, /256 fixed -> >> 11 */
         if ((G.frame >> 3) & 1) Spr_Add(176 + tx - 3, ty - 3, SZ_8x8, SPR_FX_MINIDOT, OP_MISC, 0, 0);
     }
+    if (G.show_map && !power_on && ((G.frame >> 4) & 1)) {
+        int gx, gy, gc; const char *gl;
+        if (Objective_Get(&gx, &gy, &gl, &gc)) Spr_Add(176 + (gx >> 3) - 4, (gy >> 3) - 4, SZ_8x8, SPR_FX_MINIGEN, OP_FX, 0, 0);
+    }
+    draw_pointer();
     if (player.state == PS_ALIVE) {
         if (player.dmg_dir[0] && (player.dmg_dir[0] & 4)) Spr_Add(116, 2, SZ_8x8, SPR_FX_DMG_U, OP_FX, 0, 0);
         if (player.dmg_dir[1] && (player.dmg_dir[1] & 4)) Spr_Add(116, 150, SZ_8x8, SPR_FX_DMG_D, OP_FX, 0, 0);
         if (player.dmg_dir[2] && (player.dmg_dir[2] & 4)) Spr_Add(2, 76, SZ_8x8, SPR_FX_DMG_L, OP_FX, 0, 0);
         if (player.dmg_dir[3] && (player.dmg_dir[3] & 4)) Spr_Add(230, 76, SZ_8x8, SPR_FX_DMG_R, OP_FX, 0, 0);
     }
+
+    draw_perk_gems();
 
     /* ---- reticle on the current target */
     if (player.target >= 0 && player.state == PS_ALIVE) {

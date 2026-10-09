@@ -150,3 +150,27 @@ void Interact_Draw(int zone)
     }
     if (interact_progress) Hud_Bar(11, 16, 8, interact_progress, 100, HC_YELLOW);
 }
+
+int Objective_Get(int *wx, int *wy, const char **label, int *cost)
+{
+    if (power_on) return 0;
+    if (!Map_AreaOpen(AREA_G)) {
+        /* the generator room is still locked: point at its door (door 1 = GENERATOR ACCESS) */
+        const DoorDef *d = &map_doors[1];
+        *wx = d->x * 8 + d->w * 4;
+        *wy = d->y * 8 + d->h * 4;
+        *label = "GEN DOOR";
+        *cost = (doors_opened & 2) ? 0 : d->cost;
+        return 1;
+    }
+    for (int i = 0; i < NUM_INTERACTS; i++) {
+        const Interact *z = &map_interacts[i];
+        if (z->kind != IK_GEN) continue;
+        *wx = z->x + z->w / 2;
+        *wy = z->y + z->h / 2;
+        *label = "GENERATOR";
+        *cost = 0;
+        return 1;
+    }
+    return 0;
+}

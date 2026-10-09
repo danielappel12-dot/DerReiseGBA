@@ -108,7 +108,7 @@ void Video_LoadTitleBg(void)
     memset32((void *)SCR_BASE(SB_MINI), 0, 512);
     for (int y = 0; y < LOGO_H; y++)
         for (int x = 0; x < LOGO_W; x++)
-            SCR_BASE(SB_MINI)[(y + 4) * 32 + x + 1] = (CB1_LOGO + logo_map[y * LOGO_W + x]) | (1 << 12);
+            SCR_BASE(SB_MINI)[y * 32 + x + 1] = (CB1_LOGO + logo_map[y * LOGO_W + x]) | (1 << 12);
     REG_DISPCNT &= ~DCNT_BLANK;
 }
 

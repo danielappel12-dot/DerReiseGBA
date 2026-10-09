@@ -17,8 +17,9 @@ set -u
 ROM=$1; PREFIX=$2; shift 2
 export DISPLAY=:99
 if ! xdpyinfo >/dev/null 2>&1; then
-  Xvfb :99 -screen 0 1024x768x24 >/dev/null 2>&1 &
-  sleep 1
+  rm -f /tmp/.X99-lock /tmp/.X11-unix/X99
+  setsid nohup Xvfb :99 -screen 0 1024x768x24 </dev/null >/dev/null 2>&1 &
+  sleep 2
 fi
 rm -f /tmp/mgba_test.log
 SDL_AUDIODRIVER=dummy /usr/games/mgba -3 ${EMU_ARGS:-} "$ROM" >/tmp/mgba_test.log 2>&1 &

@@ -107,9 +107,12 @@ title → main menu (START / OPTIONS / CONTROLS / HIGH SCORES).
 3. Spend points on:
    * **Doors** – open new rooms (more space, more spawn points, more machines)
    * **Weapon racks** – on room walls (buy a weapon, or refill it for half price)
-   * **Perk machines** – five permanent upgrades (need power)
+   * **Perk machines** – five permanent upgrades (need power). Once powered, each unowned machine gets a
+     bobbing colour-coded gem and a lit floor pad; the gem bobs faster when you can afford it
    * Everything marked *POWER REQUIRED* needs the **generator**
-4. Find the **generator** in the Generator Room (hold B to activate). Lights come
+4. Find the **generator** in the Generator Room (hold B to activate). While the power is off the HUD says
+   `POWER OFF → GEN DOOR 750` (then `GENERATOR`), a yellow arrow points toward it (bouncing above it when on
+   screen) and it blinks yellow on the minimap. Lights come
    on, machines wake up and the second tier of doors/weapons unlocks.
 5. Survive as long as you can. Your best wave / score / kills / survival time are saved.
 

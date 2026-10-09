@@ -279,6 +279,9 @@ def build(ts):
     # generator (tile rect at room G local 8,8 size 3x2)
     gx, gy = L.room_rect('G')[0] + 8, L.room_rect('G')[1] + 8
     add_interact(IK_GEN, 0, 0, gx, gy, 3, 2, margin_px=10)
+    for jj in range(2):
+        for ii in range(3):
+            L.mini[gy + jj][gx + ii] = 6
     # swap on/off for generator tiles
     on = ts.add_block(A.obj_generator(True))
     off = ts.add_block(A.obj_generator(False))
@@ -301,6 +304,7 @@ def build(ts):
                 raise
             gx2, gy2 = rx + lx, ry
         L.mini[gy2][gx2] = 7; L.mini[gy2][gx2 + 1] = 7
+        L.perk_sites = getattr(L, 'perk_sites', []) + [(gx2, gy2)]
         pid = PERKS.index(pname)
         add_interact(IK_PERK, pid, cost, gx2, gy2, 2, 3, margin_px=10)
         main, light = A.PERK_COLORS[pname]
@@ -422,6 +426,12 @@ def build(ts):
                     x2, y2 = lx + dx, ly + dy
                     if 0 <= x2 < W and 0 <= y2 < H and L.kind[y2][x2] == 'floor':
                         L.lit[(x2, y2)] = 5 if warm else 7
+    for (px_, py_) in getattr(L, 'perk_sites', []):
+        for dy in range(3, 6):
+            for dx in range(-2, 4):
+                x2, y2 = px_ + dx, py_ + dy
+                if 0 <= x2 < W and 0 <= y2 < H and L.kind[y2][x2] == 'floor' and (dx - 0.5) ** 2 / 6.0 + (dy - 3.5) ** 2 / 3.0 <= 1.2:
+                    L.lit[(x2, y2)] = 5
     return L
 
 

@@ -47,6 +47,9 @@ void Game_NewRun(void)
     World_Reset();
     Video_ModeGame();
     Map_Reveal(player.x >> 11, player.y >> 11, 7);
+    /* the generator is always on the map (yellow) so the objective is easy to find */
+    for (int i = 0; i < MAP_W * MAP_H; i++)
+        if (map_mini[i] == 6) Mini_Pixel(i & 63, i >> 6, 6);
     Rounds_StartWave(1);
     G.state = ST_ROUND_START;
     G.state_frame = 0;
