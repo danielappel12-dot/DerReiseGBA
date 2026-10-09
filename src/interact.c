@@ -141,7 +141,7 @@ void Interact_Draw(int zone)
         char num[12];
         UInt2Str(num, (u32)cost, 1, '0');
         int n = 0;
-        const char *pre = "COST ";
+        const char *pre = "COST $";
         for (int i = 0; pre[i]; i++) buf[n++] = pre[i];
         for (int i = 0; num[i]; i++) buf[n++] = num[i];
         buf[n] = 0;

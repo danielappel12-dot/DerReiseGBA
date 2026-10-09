@@ -132,13 +132,14 @@ void Hud_Update(void)
 
 static void draw_score_block(void)
 {
-    Hud_Text(0, 0, "SCORE", HC_GRAY);
-    Hud_Num(6, 0, G.score, 6, HC_WHITE, '0');
+    Hud_Text(0, 0, "POINTS", HC_GRAY);
+    Hud_Text(7, 0, "$", HC_YELLOW);
+    Hud_Num(8, 0, G.score, 6, HC_WHITE, '0');
     Hud_Text(0, 1, "WAVE", HC_GRAY);
     Hud_Num(5, 1, rounds.wave, 2, HC_ORANGE, '0');
     if (G.score_gain_t) {
-        Hud_Text(13, 0, "+", HC_YELLOW);
-        Hud_Num(14, 0, G.score_gain, 1, HC_YELLOW, ' ');
+        Hud_Text(15, 0, "+$", HC_YELLOW);
+        Hud_Num(17, 0, G.score_gain, 1, HC_YELLOW, ' ');
     }
 }
 
@@ -155,7 +156,7 @@ void Hud_Game(void)
             int pal = ((G.frame >> 4) & 1) ? HC_YELLOW : HC_ORANGE;
             Hud_Text(9, 1, "POWER OFF", HC_RED);
             Hud_Text(9, 2, lab, pal);
-            if (oc > 0) Hud_Num(9 + strlen_(lab) + 1, 2, oc, 4, pal, ' ');
+            if (oc > 0) { Hud_Text(9 + strlen_(lab) + 1, 2, "$", pal); Hud_Num(9 + strlen_(lab) + 2, 2, oc, 1, pal, ' '); }
         }
     }
 
@@ -171,10 +172,12 @@ void Hud_Game(void)
     Hud_Tile(0, 18, UI_ICON_HEART, HC_RED);
     Hud_Num(1, 18, p->hp, 3, hp_pal, ' ');
     Hud_Bar(5, 18, 5, p->hp, p->maxhp, hp_pal);
-    /* perk tags */
-    int x = 0;
-    for (int i = 0; i < PERK_COUNT; i++) {
-        if (p->perks & (1 << i)) { Hud_Text(x, 19, perk_defs[i].tag, HC_YELLOW); x += 3; }
+    /* owned perks: logo column down the left side (colours match the perk machines) */
+    {
+        static const u8 perk_pal[PERK_COUNT] = { HC_RED, HC_YELLOW, HC_CYAN, HC_GREEN, HC_ORANGE };
+        int py = 8;
+        for (int i = 0; i < PERK_COUNT; i++)
+            if (p->perks & (1 << i)) Hud_Tile(0, py++, UI_PERK_0 + i, perk_pal[i]);
     }
 
     /* ---- bottom right: weapon + ammo */
@@ -254,7 +257,7 @@ void Hud_Debug(void)
     Hud_Text(7, 4, "BL", HC_CYAN);   Hud_Num(10, 4, Bullets_Count(), 2, HC_WHITE, ' ');
     Hud_Text(14, 4, "W", HC_CYAN);   Hud_Num(15, 4, rounds.wave, 2, HC_WHITE, ' ');
     Hud_Text(0, 5, "HP", HC_CYAN);   Hud_Num(3, 5, player.hp, 3, HC_WHITE, ' ');
-    Hud_Text(8, 5, "PT", HC_CYAN);  Hud_Num(10, 5, G.score, 4, HC_WHITE, ' ');
+    Hud_Text(8, 5, "$", HC_CYAN);  Hud_Num(10, 5, G.score, 4, HC_WHITE, ' ');
     Hud_Text(0, 6, "GOD", HC_CYAN);  Hud_Text(4, 6, G.god ? "ON" : "OFF", HC_WHITE);
     Hud_Text(14, 5, weapon_defs[player.wpn[player.cur].id].name, HC_YELLOW);
     u32 free_iw = 0x03007800u - (u32)&__bss_end;

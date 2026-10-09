@@ -33,11 +33,16 @@
 #define UI_ICON_HEART (CB1_UI + 19)
 #define UI_ICON_BULLET (CB1_UI + 20)
 #define UI_ICON_COIN (CB1_UI + 21)
-#define CB1_LOGO 350
+#define UI_PERK_0 (CB1_UI + 22)
+#define UI_PERK_1 (CB1_UI + 23)
+#define UI_PERK_2 (CB1_UI + 24)
+#define UI_PERK_3 (CB1_UI + 25)
+#define UI_PERK_4 (CB1_UI + 26)
+#define CB1_LOGO 355
 #define LOGO_W 29
 #define LOGO_H 8
-#define CB1_END 473
-#define CB1_TILE_WORDS 3784
+#define CB1_END 478
+#define CB1_TILE_WORDS 3824
 
 #define SPR_PLAYER_BASE 0
 #define SPR_P_WALK_DOWN_0 0

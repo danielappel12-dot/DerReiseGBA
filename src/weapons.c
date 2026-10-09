@@ -5,10 +5,11 @@
 #include "enemy.h"
 #include "audio.h"
 #include "utils.h"
+#include "rounds.h"
 
 /*  name              dmg dly mag  res  rld spr spd  range pierce pel kind      rec price sfx */
 const WeaponDef weapon_defs[W_COUNT] = {
-    { "SERVICE-9",      25, 11, 12,  96, 42,  3,  64, 190, 1, 1, WK_BULLET, 0,    0, SFX_SHOT_PISTOL  },
+    { "SERVICE-9",      20, 12, 12,  96, 42,  3,  64, 190, 1, 1, WK_BULLET, 0,    0, SFX_SHOT_PISTOL  },
     { "TRENCH SHOTGUN", 20, 36,  6,  48, 84, 14,  56,  96, 1, 6, WK_BULLET, 3,  500, SFX_SHOT_SHOTGUN },
     { "RANGER SMG",     13,  4, 30, 210, 66,  8,  66, 150, 1, 1, WK_BULLET, 0, 1000, SFX_SHOT_SMG     },
     { "HEAVY RIFLE",    95, 28,  8,  56, 88,  1,  96, 280, 3, 1, WK_BULLET, 2, 1250, SFX_SHOT_RIFLE   },
@@ -164,6 +165,8 @@ void Weapon_Melee(Player *p)
         /* roughly in front (dot product > -0.3) */
         int dot = (dx * ax + dy * ay);
         if (dot < -(int)(Dist(dx, dy) * 70)) continue;
-        Enemy_Damage(e, 150, 0, 1, ang);
+        /* knife damage scales so a full-health zombie dies in exactly <wave> hits (1 on wave 1, 2 on wave 2 ...) */
+        int hits = rounds.wave < 1 ? 1 : rounds.wave;
+        Enemy_Damage(e, (e->maxhp + hits - 1) / hits, 0, 1, ang);
     }
 }

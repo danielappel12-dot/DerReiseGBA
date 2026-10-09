@@ -203,6 +203,22 @@ def build_ui_tiles():
     ic = Canvas(8, 8)
     ic.ellipse(4, 4, 3, 3, 2); ic.vline(4, 2, 4, 5); ic.px(3, 2, 3)
     ui_tile('ICON_COIN', ic)
+    # perk logos, drawn 6x6 inside the tile ('#' main, 'o' highlight); order = perk ids
+    PERK_ART = [
+        ["##..##", "o#####", "######", ".####.", "..##.."],          # IRON HEART: heart
+        ["...##.", "..##..", ".####.", "..##..", ".##..."],          # QUICK HANDS: bolt
+        ["..##..", ".#..#.", "##oo##", "##oo##", ".#..#.", "..##.."],  # STEADY AIM: crosshair
+        ["#..#..", ".#..#.", "..#..#", ".#..#.", "#..#.."],          # SECOND WIND: speed chevrons
+        ["..##..", "..#o..", "######", "o#####", "..##..", "..##.."],  # FIELD MEDIC: cross
+    ]
+    for i, art in enumerate(PERK_ART):
+        ic = Canvas(8, 8)
+        for y, row in enumerate(art):
+            for x, ch in enumerate(row):
+                if ch != '.':
+                    ic.px(1 + x, 1 + y, 3 if ch == 'o' else 2)
+        ic.outline(1)
+        ui_tile('PERK_%d' % i, ic)
     return _ui
 
 

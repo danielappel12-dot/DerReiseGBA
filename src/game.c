@@ -202,6 +202,7 @@ static void update_play(void)
 #endif
 #ifdef BOT_PICKUPS
     if (G.state_frame == 200) for (int i = 0; i < PU_COUNT; i++) Pickups_Spawn(i, (player.x >> 8) - 50 + i * 20, (player.y >> 8) - 30);
+    if (G.state_frame == 100) for (int i = 0; i < PERK_COUNT; i++) Perk_Buy(i);
     if (G.state_frame == 520) Pickups_Apply(PU_INSTA);
     if (G.state_frame == 700) { Pickups_Apply(PU_NUKE); }
 #endif

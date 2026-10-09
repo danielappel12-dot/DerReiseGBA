@@ -240,7 +240,7 @@ void Menu_Draw(void)
         Hud_BigC(1, "HIGH SCORES", HC_ORANGE);
         Hud_Box(1, 4, 28, 14);
         Hud_Text(3, 6, "HIGHEST WAVE", HC_WHITE);   Hud_Num(21, 6, save.best_wave, 6, HC_ORANGE, ' ');
-        Hud_Text(3, 8, "HIGHEST SCORE", HC_WHITE);  Hud_Num(21, 8, save.best_score, 6, HC_YELLOW, ' ');
+        Hud_Text(3, 8, "MOST POINTS", HC_WHITE);  Hud_Text(20, 8, "$", HC_YELLOW); Hud_Num(21, 8, save.best_score, 6, HC_YELLOW, ' ');
         Hud_Text(3, 10, "MOST KILLS", HC_WHITE);    Hud_Num(21, 10, save.best_kills, 6, HC_WHITE, ' ');
         Hud_Text(3, 12, "LONGEST SURVIVAL", HC_WHITE); time_str(b, save.best_time); Hud_Text(22, 12, b, HC_CYAN);
         Hud_Text(3, 14, "TOTAL KILLS", HC_GRAY);   Hud_Num(21, 14, save.total_kills, 6, HC_GREEN, ' ');
@@ -272,7 +272,7 @@ void Menu_Draw(void)
     case ST_STATUS: {
         Hud_Box(0, 0, 22, 20);
         Hud_Text(2, 1, "STATUS", HC_ORANGE);
-        Hud_Text(2, 3, "SCORE", HC_GRAY);  Hud_Num(8, 3, G.score, 6, HC_WHITE, '0');
+        Hud_Text(2, 3, "POINTS", HC_GRAY); Hud_Text(9, 3, "$", HC_YELLOW); Hud_Num(10, 3, G.score, 6, HC_WHITE, '0');
         Hud_Text(2, 5, "WAVE", HC_GRAY);   Hud_Num(7, 5, rounds.wave, 2, HC_ORANGE, '0');
         Hud_Text(11, 5, "KILLS", HC_GRAY); Hud_Num(17, 5, G.kills, 3, HC_WHITE, ' ');
         Hud_Text(2, 7, "TIME", HC_GRAY);   time_str(b, G.play_frames); Hud_Text(7, 7, b, HC_WHITE);
@@ -289,7 +289,13 @@ void Menu_Draw(void)
         Hud_Text(2, 14, "PERKS", HC_YELLOW);
         int row = 15;
         for (int i = 0; i < PERK_COUNT; i++)
-            if (player.perks & (1 << i)) { Hud_Text(2, row, perk_defs[i].name, HC_CYAN); row += 1; if (row > 17) break; }
+            if (player.perks & (1 << i)) {
+                static const u8 pp[PERK_COUNT] = { HC_RED, HC_YELLOW, HC_CYAN, HC_GREEN, HC_ORANGE };
+                Hud_Tile(2, row, UI_PERK_0 + i, pp[i]);
+                Hud_Text(4, row, perk_defs[i].name, HC_WHITE);
+                row += 1;
+                if (row > 17) break;
+            }
         if (row == 15) Hud_Text(2, 15, "NONE", HC_GRAY);
         Hud_Text(2, 18, G.show_map ? "A: MAP OFF" : "A: MAP ON", HC_GRAY);
         Hud_Text(14, 18, "B: BACK", HC_GRAY);
@@ -299,7 +305,7 @@ void Menu_Draw(void)
         Hud_BigC(2, "SYSTEM FAILURE", HC_RED);
         Hud_Box(6, 5, 18, 14);
         Hud_Text(9, 6, "WAVE", HC_GRAY);   Hud_Num(16, 6, rounds.wave, 2, HC_ORANGE, '0');
-        Hud_Text(9, 8, "SCORE", HC_GRAY);  Hud_Num(16, 8, G.score, 6, HC_YELLOW, '0');
+        Hud_Text(9, 8, "POINTS", HC_GRAY); Hud_Text(16, 8, "$", HC_YELLOW); Hud_Num(17, 8, G.score, 6, HC_YELLOW, '0');
         Hud_Text(9, 10, "KILLS", HC_GRAY); Hud_Num(16, 10, G.kills, 3, HC_WHITE, '0');
         Hud_Text(9, 12, "TIME", HC_GRAY);  time_str(b, G.play_frames); Hud_Text(16, 12, b, HC_WHITE);
         if (G.new_best && ((G.frame >> 3) & 1)) Hud_TextC(14, "NEW BEST!", HC_GREEN);

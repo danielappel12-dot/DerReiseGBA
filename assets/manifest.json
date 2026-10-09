@@ -272,7 +272,7 @@
   },
   "ui": {
    "png": "assets/ui/ui.png",
-   "count": 22,
+   "count": 27,
    "cols": 16,
    "names": [
     "BLANK",
@@ -296,7 +296,12 @@
     "PANEL_BR",
     "ICON_HEART",
     "ICON_BULLET",
-    "ICON_COIN"
+    "ICON_COIN",
+    "PERK_0",
+    "PERK_1",
+    "PERK_2",
+    "PERK_3",
+    "PERK_4"
    ]
   },
   "logo": {

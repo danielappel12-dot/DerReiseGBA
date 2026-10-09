@@ -91,7 +91,7 @@ title → main menu (START / OPTIONS / CONTROLS / HIGH SCORES).
 |---|---|
 | **D-pad** | move |
 | **A** (hold) | fire – auto-aims at the nearest zombie in sight (if none: fires in your walking direction) |
-| **B** | tap: reload, or **melee** when a zombie is next to you |
+| **B** | tap: reload, or **knife** a zombie next to you – it takes as many knife hits as the current wave number (1 on wave 1, 2 on wave 2, ...) |
 | **B (hold)** | buy / open / activate when standing at a door, machine, weapon rack, generator or terminal |
 | **L** | switch weapon (you carry two) |
 | **R** | cycle the target lock to the next-nearest zombie |
@@ -102,7 +102,7 @@ title → main menu (START / OPTIONS / CONTROLS / HIGH SCORES).
 
 1. Waves of zombies spawn from breach points around the facility
    (*WAVE n → READY? → fight → WAVE CLEARED*, ~3 s breather, then the next wave).
-2. Kills earn points: **+100** kill, **+150** critical ("headshot") kill, **+130** melee
+2. Kills earn points (**$**): **+100** kill, **+150** critical ("headshot") kill, **+130** melee
    kill, **+10** per hit. *Double Score* doubles everything.
 3. Spend points on:
    * **Doors** – open new rooms (more space, more spawn points, more machines)
@@ -114,7 +114,7 @@ title → main menu (START / OPTIONS / CONTROLS / HIGH SCORES).
    `POWER OFF → GEN DOOR 750` (then `GENERATOR`), a yellow arrow points toward it (bouncing above it when on
    screen) and it blinks yellow on the minimap. Lights come
    on, machines wake up and the second tier of doors/weapons unlocks.
-5. Survive as long as you can. Your best wave / score / kills / survival time are saved.
+5. Survive as long as you can. Your best wave / points / kills / survival time are saved.
 
 ### BLACKSITE 13
 
@@ -136,7 +136,7 @@ signs, blood trails, broken containment tubes and abandoned equipment.
 
 | Weapon | Role | Price |
 |---|---|---|
-| **SERVICE-9** | reliable starter pistol (12 / 96) | start |
+| **SERVICE-9** | reliable starter pistol, 20 damage (12 / 96) | start |
 | **TRENCH SHOTGUN** | 6 pellets, wide spread, huge close-range damage | 500 |
 | **RANGER SMG** | very fast fire rate, low damage | 1000 |
 | **HEAVY RIFLE** | slow, high damage, pierces 3 zombies | 1250 |
