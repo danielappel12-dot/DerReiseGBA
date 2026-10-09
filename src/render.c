@@ -136,14 +136,6 @@ void World_Render(void)
     Spr_Begin();
 
     /* ---- HUD-level sprites (priority 0) */
-    if (G.show_map) {
-        int tx = player.x >> 11, ty = player.y >> 11;   /* /8 tile, /256 fixed -> >> 11 */
-        if ((G.frame >> 3) & 1) Spr_Add(176 + tx - 3, ty - 3, SZ_8x8, SPR_FX_MINIDOT, OP_MISC, 0, 0);
-    }
-    if (G.show_map && !power_on && ((G.frame >> 4) & 1)) {
-        int gx, gy, gc; const char *gl;
-        if (Objective_Get(&gx, &gy, &gl, &gc)) Spr_Add(176 + (gx >> 3) - 4, (gy >> 3) - 4, SZ_8x8, SPR_FX_MINIGEN, OP_FX, 0, 0);
-    }
     draw_pointer();
     if (player.state == PS_ALIVE) {
         if (player.dmg_dir[0] && (player.dmg_dir[0] & 4)) Spr_Add(116, 2, SZ_8x8, SPR_FX_DMG_U, OP_FX, 0, 0);

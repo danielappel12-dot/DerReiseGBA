@@ -96,7 +96,7 @@ title → main menu (START / OPTIONS / CONTROLS / HIGH SCORES).
 | **L** | switch weapon (you carry two) |
 | **R** | cycle the target lock to the next-nearest zombie |
 | **START** | pause (RESUME / CONTROLS / OPTIONS / QUIT) |
-| **SELECT** | status screen (stats, loadout, perks); press **A** there to toggle the minimap |
+| **SELECT** | status screen (points, wave, kills, time, loadout, perks) |
 
 ### The loop
 
@@ -112,7 +112,7 @@ title → main menu (START / OPTIONS / CONTROLS / HIGH SCORES).
    * Everything marked *POWER REQUIRED* needs the **generator**
 4. Find the **generator** in the Generator Room (hold B to activate). While the power is off the HUD says
    `POWER OFF → GEN DOOR 750` (then `GENERATOR`), a yellow arrow points toward it (bouncing above it when on
-   screen) and it blinks yellow on the minimap. Lights come
+   screen). Lights come
    on, machines wake up and the second tier of doors/weapons unlocks.
 5. Survive as long as you can. Your best wave / points / kills / survival time are saved.
 
@@ -216,7 +216,7 @@ src/menu.c                title / menu / options / controls / high scores / paus
 src/player.c  src/weapons.c  src/bullets.c  src/enemy.c  src/rounds.c   gameplay
 src/map.c  src/collision.c  src/nav.c     level state (doors, power), tile collision, flow-field
 src/pickups.c  src/perks.c  src/interact.c  src/effects.c  src/camera.c
-src/render.c  src/video.c  src/hud.c      sprites (depth sorted OAM), layers, HUD text/minimap
+src/render.c  src/video.c  src/hud.c      sprites (depth sorted OAM), layers, HUD text
 src/audio.c               PSG sound effects + step sequencer music
 src/save.c                SRAM save: Save_Load / Save_Save / Save_Clear
 src/input.c  src/utils.c  src/prof.c      input (+ bot), maths/RNG, profiler
@@ -236,11 +236,11 @@ with `PAUSED`, `STATUS` (SELECT) and `GAME_OVER` overlays. The three round state
 
 * **No dynamic allocation.** Pools: 32 enemies, 32 player bullets, 12 enemy projectiles,
   12 pickups, 40 effects; at most 127 OAM entries.
-* **Hardware discipline.** Game code only writes shadow buffers (OAM, HUD tile map, minimap
+* **Hardware discipline.** Game code only writes shadow buffers (OAM, HUD tile map, (unused)
   tiles, queued map-entry updates, scroll/blend registers); `Video_Flush()` copies them to
   VRAM/OAM right after VBlank (`VBlankIntrWait` + a minimal IRQ handler in `crt0.s`).
 * **Layers.** BG0 HUD/text (tile font, 16×16 banner font), BG1 world (64×64 tiles, 512×512 px,
-  hardware scrolling), BG2 logo / minimap, OBJ for everything that moves. Darkness before the
+  hardware scrolling), BG2 title logo, OBJ for everything that moves. Darkness before the
   power is restored, hit flashes and the white power-up flash use hardware brightness blending.
   Light pools on the floor are palette-bank swaps (banks 5/7 mirror bank 0 until the generator is on).
   Animated LEDs/title gears are palette cycling / tile swaps.
@@ -303,7 +303,7 @@ when many zombies are alive or the wave is high – it switches mid-bar without 
 ## Save data
 
 `Save_Load()`, `Save_Save()`, `Save_Clear()` (src/save.c) wrap a checksummed struct in SRAM:
-music/sfx/minimap/aim-range settings, best wave, best score, most kills, longest survival,
+music/sfx/aim-range settings, best wave, best score, most kills, longest survival,
 total kills, games played, "controls seen" flag. A corrupt or missing save falls back to defaults.
 
 ---

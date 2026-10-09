@@ -132,27 +132,26 @@ void Menu_Update(void)
         if (KeyPressed(KEY_A) || KeyPressed(KEY_B) || KeyPressed(KEY_START)) { Audio_PlaySfx(SFX_MENU_SELECT); Game_SetState(ST_MENU); }
         break;
     case ST_OPTIONS: {
-        int act = nav(6);
+        int act = nav(5);
         int left = KeyPressed(KEY_LEFT), right = KeyPressed(KEY_RIGHT);
         int chg = act || left || right;
         if (KeyPressed(KEY_B)) { Save_Save(); Audio_PlaySfx(SFX_MENU_SELECT); G.prev_state == ST_PAUSED ? (void)(G.state = ST_PAUSED) : Game_SetState(ST_MENU); break; }
-        if (sel != 4) confirm_erase = 0;
+        if (sel != 3) confirm_erase = 0;
         if (chg) {
             switch (sel) {
             case 0: save.music_on ^= 1; Audio_Enable(save.music_on, save.sfx_on); Audio_SetMusic(MUS_MENU); break;
             case 1: save.sfx_on ^= 1; Audio_Enable(save.music_on, save.sfx_on); Audio_PlaySfx(SFX_MENU_SELECT); break;
-            case 2: save.minimap_on ^= 1; G.show_map = save.minimap_on; Audio_PlaySfx(SFX_MENU_SELECT); break;
-            case 3:
+            case 2:
                 if (left) save.aim_range = (u8)((save.aim_range + 2) % 3); else save.aim_range = (u8)((save.aim_range + 1) % 3);
                 Audio_PlaySfx(SFX_MENU_SELECT);
                 break;
-            case 4:
+            case 3:
                 if (act) {
                     if (confirm_erase) { Save_Clear(); Audio_Enable(save.music_on, save.sfx_on); confirm_erase = 0; Audio_PlaySfx(SFX_DENIED); }
                     else confirm_erase = 1;
                 }
                 break;
-            case 5:
+            case 4:
                 if (act) { Save_Save(); Audio_PlaySfx(SFX_MENU_SELECT); G.prev_state == ST_PAUSED ? (void)(G.state = ST_PAUSED) : Game_SetState(ST_MENU); }
                 break;
             }
@@ -172,7 +171,6 @@ void Menu_Update(void)
         }
         break;
     case ST_STATUS:
-        if (KeyPressed(KEY_A)) { G.show_map ^= 1; Audio_PlaySfx(SFX_MENU_SELECT); }
         if (KeyPressed(KEY_B) || KeyPressed(KEY_SELECT) || KeyPressed(KEY_START)) { Audio_PlaySfx(SFX_MENU_SELECT); back_to_world(); return; }
         break;
     case ST_GAME_OVER:
@@ -193,7 +191,7 @@ static void draw_controls(void)
     if (ctrl_page == 0) {
         static const char *const k[][2] = {
             { "D-PAD", "MOVE" }, { "A", "FIRE (HOLD)" }, { "B", "RELOAD / MELEE" }, { "B HOLD", "BUY / USE / OPEN" },
-            { "L", "SWITCH WEAPON" }, { "R", "CYCLE TARGET" }, { "START", "PAUSE" }, { "SELECT", "STATUS + MAP" },
+            { "L", "SWITCH WEAPON" }, { "R", "CYCLE TARGET" }, { "START", "PAUSE" }, { "SELECT", "STATUS" },
         };
         for (int i = 0; i < 8; i++) {
             Hud_Text(3, 3 + i * 2, k[i][0], HC_YELLOW);
@@ -251,14 +249,13 @@ void Menu_Draw(void)
         Spr_Begin();
         Hud_BigC(1, "OPTIONS", HC_ORANGE);
         static const char *const aim[3] = { "SHORT", "MEDIUM", "LONG" };
-        Hud_Box(2, 5, 26, 14);
+        Hud_Box(2, 5, 26, 12);
         int y = 7;
         Hud_Text(5, y, "MUSIC", HC_WHITE);       Hud_Text(19, y, save.music_on ? "ON" : "OFF", save.music_on ? HC_GREEN : HC_RED);
         Hud_Text(5, y + 2, "SOUND FX", HC_WHITE); Hud_Text(19, y + 2, save.sfx_on ? "ON" : "OFF", save.sfx_on ? HC_GREEN : HC_RED);
-        Hud_Text(5, y + 4, "MINIMAP", HC_WHITE);  Hud_Text(19, y + 4, save.minimap_on ? "ON" : "OFF", save.minimap_on ? HC_GREEN : HC_RED);
-        Hud_Text(5, y + 6, "AIM RANGE", HC_WHITE); Hud_Text(19, y + 6, aim[save.aim_range % 3], HC_CYAN);
-        Hud_Text(5, y + 8, confirm_erase ? "SURE? PRESS A" : "ERASE SAVE", confirm_erase ? HC_RED : HC_WHITE);
-        Hud_Text(5, y + 10, "BACK", HC_WHITE);
+        Hud_Text(5, y + 4, "AIM RANGE", HC_WHITE); Hud_Text(19, y + 4, aim[save.aim_range % 3], HC_CYAN);
+        Hud_Text(5, y + 6, confirm_erase ? "SURE? PRESS A" : "ERASE SAVE", confirm_erase ? HC_RED : HC_WHITE);
+        Hud_Text(5, y + 8, "BACK", HC_WHITE);
         Hud_Tile(3, y + sel * 2, CB1_FONT + ('>' - 32), HC_YELLOW);
         break;
     }
@@ -270,7 +267,7 @@ void Menu_Draw(void)
         list_item(14, "QUIT", 3, HC_YELLOW, HC_WHITE);
         break;
     case ST_STATUS: {
-        Hud_Box(0, 0, 22, 20);
+        Hud_Box(0, 0, 28, 20);
         Hud_Text(2, 1, "STATUS", HC_ORANGE);
         Hud_Text(2, 3, "POINTS", HC_GRAY); Hud_Text(9, 3, "$", HC_YELLOW); Hud_Num(10, 3, G.score, 6, HC_WHITE, '0');
         Hud_Text(2, 5, "WAVE", HC_GRAY);   Hud_Num(7, 5, rounds.wave, 2, HC_ORANGE, '0');
@@ -297,8 +294,7 @@ void Menu_Draw(void)
                 if (row > 17) break;
             }
         if (row == 15) Hud_Text(2, 15, "NONE", HC_GRAY);
-        Hud_Text(2, 18, G.show_map ? "A: MAP OFF" : "A: MAP ON", HC_GRAY);
-        Hud_Text(14, 18, "B: BACK", HC_GRAY);
+        Hud_Text(2, 18, "B: BACK", HC_GRAY);
         break;
     }
     case ST_GAME_OVER: {

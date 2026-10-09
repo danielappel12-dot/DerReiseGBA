@@ -37,7 +37,7 @@ void World_Reset(void)
     G.new_best = 0;
     cur_area = -1; area_t = 0;
     last_ptx = last_pty = -1;
-    G.show_map = save.minimap_on;
+    G.show_map = 0;
     Cam_Init(player.x >> 8, player.y >> 8);
 }
 
@@ -46,10 +46,6 @@ void Game_NewRun(void)
     Rand_Seed(REG_TM0CNT_L * 2654435761u + G.frame * 40503u + 12345u);
     World_Reset();
     Video_ModeGame();
-    Map_Reveal(player.x >> 11, player.y >> 11, 7);
-    /* the generator is always on the map (yellow) so the objective is easy to find */
-    for (int i = 0; i < MAP_W * MAP_H; i++)
-        if (map_mini[i] == 6) Mini_Pixel(i & 63, i >> 6, 6);
     Rounds_StartWave(1);
     G.state = ST_ROUND_START;
     G.state_frame = 0;
@@ -117,7 +113,6 @@ void World_Update(int running)
     PROF_END(PF_NAV);
     if (ptx != last_ptx || pty != last_pty) {
         last_ptx = ptx; last_pty = pty;
-        Map_Reveal(ptx, pty, 6);
         announce_area();
     }
     if (G.score_gain_t) G.score_gain_t--;
@@ -237,7 +232,7 @@ void Game_SetState(int st)
 void Game_Init(void)
 {
     memset(&G, 0, sizeof(G));
-    G.show_map = save.minimap_on;
+    G.show_map = 0;
 #if defined(BOT) && !defined(BOT_QUIET)
     G.debug = 1;
 #endif

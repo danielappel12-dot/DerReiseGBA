@@ -114,14 +114,8 @@ void Video_LoadTitleBg(void)
 
 void Video_ModeGame(void)
 {
-    /* BG2 = minimap: 8x8 tiles (64x64 px) in the top-right corner of the screen */
-    memset32((void *)SCR_BASE(SB_MINI), 0, 512);
-    for (int ty = 0; ty < 8; ty++)
-        for (int tx = 0; tx < 8; tx++)
-            SCR_BASE(SB_MINI)[ty * 32 + 22 + tx] = (u16)((CB1_MINI + ty * 8 + tx) | (6 << 12));
-    mini_dirty = 1;
-    REG_BG2CNT = BG_PRIO(0) | BG_CBB(1) | BG_SBB(SB_MINI) | BG_4BPP | BG_REG_32x32;
-    REG_DISPCNT = DCNT_MODE0 | DCNT_OBJ_1D | DCNT_BG0 | DCNT_BG1 | DCNT_BG2 | DCNT_OBJ;
+    /* gameplay: HUD text (BG0), world (BG1) and sprites; no minimap layer */
+    REG_DISPCNT = DCNT_MODE0 | DCNT_OBJ_1D | DCNT_BG0 | DCNT_BG1 | DCNT_OBJ;
 }
 
 void Video_ModeTitle(void)
