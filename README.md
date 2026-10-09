@@ -236,8 +236,8 @@ with `PAUSED`, `STATUS` (SELECT) and `GAME_OVER` overlays. The three round state
 
 * **No dynamic allocation.** Pools: 32 enemies, 32 player bullets, 12 enemy projectiles,
   12 pickups, 40 effects; at most 127 OAM entries.
-* **Hardware discipline.** Game code only writes shadow buffers (OAM, HUD tile map, (unused)
-  tiles, queued map-entry updates, scroll/blend registers); `Video_Flush()` copies them to
+* **Hardware discipline.** Game code only writes shadow buffers (OAM, HUD tile map,
+  queued map-entry updates, scroll/blend registers); `Video_Flush()` copies them to
   VRAM/OAM right after VBlank (`VBlankIntrWait` + a minimal IRQ handler in `crt0.s`).
 * **Layers.** BG0 HUD/text (tile font, 16×16 banner font), BG1 world (64×64 tiles, 512×512 px,
   hardware scrolling), BG2 title logo, OBJ for everything that moves. Darkness before the
