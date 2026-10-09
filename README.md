@@ -111,7 +111,7 @@ title → main menu (START / OPTIONS / CONTROLS / HIGH SCORES).
      bobbing colour-coded gem and a lit floor pad; the gem bobs faster when you can afford it
    * Everything marked *POWER REQUIRED* needs the **generator**
 4. Find the **generator** in the Generator Room (hold B to activate). While the power is off the HUD says
-   `POWER OFF → GEN DOOR 750` (then `GENERATOR`), a yellow arrow points toward it (bouncing above it when on
+   `GEN DOOR $750` (then `GENERATOR`), a yellow arrow points toward it (bouncing above it when on
    screen). Lights come
    on, machines wake up and the second tier of doors/weapons unlocks.
 5. Survive as long as you can. Your best wave / points / kills / survival time are saved.

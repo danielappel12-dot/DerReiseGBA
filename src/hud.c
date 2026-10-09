@@ -154,9 +154,8 @@ void Hud_Game(void)
         int ox, oy, oc; const char *lab;
         if (Objective_Get(&ox, &oy, &lab, &oc) && p->state == PS_ALIVE) {
             int pal = ((G.frame >> 4) & 1) ? HC_YELLOW : HC_ORANGE;
-            Hud_Text(9, 1, "POWER OFF", HC_RED);
-            Hud_Text(9, 2, lab, pal);
-            if (oc > 0) { Hud_Text(9 + strlen_(lab) + 1, 2, "$", pal); Hud_Num(9 + strlen_(lab) + 2, 2, oc, 1, pal, ' '); }
+            Hud_Text(9, 1, lab, pal);
+            if (oc > 0) { Hud_Text(9 + strlen_(lab) + 1, 1, "$", pal); Hud_Num(9 + strlen_(lab) + 2, 1, oc, 1, pal, ' '); }
         }
     }
 
@@ -218,7 +217,7 @@ void Hud_Game(void)
     }
 
     /* ---- power-up timers (top centre) */
-    int row = 3;
+    int row = 2;
     if (p->overdrive_t) { Hud_Text(0, row, "OVERDRIVE", HC_ORANGE); Hud_Num(10, row, p->overdrive_t / 60 + 1, 2, HC_ORANGE, ' '); row++; }
     if (p->double_t)    { Hud_Text(0, row, "2X POINTS", HC_YELLOW); Hud_Num(10, row, p->double_t / 60 + 1, 2, HC_YELLOW, ' '); row++; }
     if (p->insta_t)     { Hud_Text(0, row, "INSTA KILL", HC_RED); Hud_Num(11, row, p->insta_t / 60 + 1, 2, HC_RED, ' '); row++; }
