@@ -166,10 +166,12 @@ via the same scaling). Every 10 waves a new difficulty tier raises health and da
 | SECOND WIND | +12 % move speed | 1500 |
 | FIELD MEDIC | regeneration starts sooner and is faster | 1250 |
 
-### Power-ups (drop from zombies, vanish after 10 s)
+### Power-ups (random drops from zombies, 7 % per kill, vanish after 10 s)
 
-AMMO CACHE (refill everything) · OVERDRIVE (rapid fire, 10 s) · DOUBLE SCORE (20 s) ·
-FULL RESTORE (health) · CLEAROUT (damages every zombie on screen).
+All six are equally likely, so the AMMO CACHE is just one of the random drops:
+**AMMO CACHE** (refill every weapon) · **OVERDRIVE** (rapid fire, 10 s) · **2X POINTS** (20 s) ·
+**FULL RESTORE** (health) · **NUKE** (kills every zombie on the map, flat +400 points, no drops) ·
+**INSTA KILL** (every hit is lethal, 20 s).
 
 ---
 

@@ -71,12 +71,14 @@ static int footprint_free(int px, int py, const EnemyDef *d)
     return !Col_BoxSolid(px, py, d->hw, d->hu);
 }
 
+static u8 nuke_mode;            /* set while a NUKE power-up kills everything (no per-kill score/drops) */
+
 static void kill_enemy(Enemy *e, int crit, int melee)
 {
     int pts = 100;
     if (melee) pts = 130;
     else if (crit) pts = 150;
-    Game_AddScore(pts);
+    if (!nuke_mode) Game_AddScore(pts);
     G.kills++;
     if (melee || crit) { G.kill_tag = (u8)(melee ? 2 : 1); G.kill_tag_t = 50; }
     e->state = ES_DEAD;
@@ -86,13 +88,14 @@ static void kill_enemy(Enemy *e, int crit, int melee)
     int ex = e->x >> 8, ey = e->y >> 8;
     Fx_Blood(ex, ey, e->type == E_BRUTE ? 10 : 6);
     Audio_PlaySfx(e->type == E_BRUTE ? SFX_BRUTE_DEATH : SFX_ENEMY_DEATH);
-    Pickups_MaybeDrop(ex, ey);
-    if (e->type == E_BRUTE) Fx_Shake(5);
+    if (!nuke_mode) Pickups_MaybeDrop(ex, ey);
+    if (e->type == E_BRUTE && !nuke_mode) Fx_Shake(5);
 }
 
 int Enemy_Damage(Enemy *e, int dmg, int crit, int melee, int hit_angle)
 {
     if (!e->active || e->state == ES_DEAD || e->hidden) return 0;
+    if (player.insta_t) dmg = e->hp;               /* INSTA KILL: every hit is lethal */
     e->hp -= (s16)dmg;
     e->flash = 4;
     Game_AddScore(10);
@@ -117,17 +120,19 @@ void Enemies_KillAll(int award)
     }
 }
 
-void Enemies_Clearout(int dmg)
+void Enemies_Nuke(void)
 {
+    nuke_mode = 1;
     for (int i = 0; i < MAX_ENEMIES; i++) {
         Enemy *e = &enemies[i];
         if (!e->active || e->state == ES_DEAD) continue;
         int sx = (e->x >> 8) - cam_x, sy = (e->y >> 8) - cam_y;
-        if (sx < -8 || sx > SCREEN_W + 8 || sy < -8 || sy > SCREEN_H + 24) continue;
-        Fx_Explosion(e->x >> 8, (e->y >> 8) - 6);
+        if (sx > -8 && sx < SCREEN_W + 8 && sy > -8 && sy < SCREEN_H + 24) Fx_Explosion(e->x >> 8, (e->y >> 8) - 6);
         e->hidden = 0;
-        Enemy_Damage(e, dmg, 0, 0, 0);
+        kill_enemy(e, 0, 0);
     }
+    nuke_mode = 0;
+    Game_AddScore(400);
 }
 
 int Enemies_NearestTo(int px, int py, int max_dist, int need_los, int skip)

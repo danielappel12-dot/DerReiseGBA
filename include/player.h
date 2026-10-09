@@ -27,7 +27,7 @@ typedef struct Player {
     WeaponSlot wpn[2];
     u8  cur;
     u8  perks;                 /* bit per PERK_* */
-    u16 overdrive_t, double_t;
+    u16 overdrive_t, double_t, insta_t;
     u16 regen_wait;
     u8  regen_tick;
     s8  target;                /* enemy index or -1 */

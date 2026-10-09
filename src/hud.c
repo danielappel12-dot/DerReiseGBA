@@ -217,7 +217,8 @@ void Hud_Game(void)
     /* ---- power-up timers (top centre) */
     int row = 3;
     if (p->overdrive_t) { Hud_Text(0, row, "OVERDRIVE", HC_ORANGE); Hud_Num(10, row, p->overdrive_t / 60 + 1, 2, HC_ORANGE, ' '); row++; }
-    if (p->double_t)    { Hud_Text(0, row, "DOUBLE SCORE", HC_YELLOW); Hud_Num(13, row, p->double_t / 60 + 1, 2, HC_YELLOW, ' '); row++; }
+    if (p->double_t)    { Hud_Text(0, row, "2X POINTS", HC_YELLOW); Hud_Num(10, row, p->double_t / 60 + 1, 2, HC_YELLOW, ' '); row++; }
+    if (p->insta_t)     { Hud_Text(0, row, "INSTA KILL", HC_RED); Hud_Num(11, row, p->insta_t / 60 + 1, 2, HC_RED, ' '); row++; }
     if (!power_on && !G.show_map) { /* nothing */ }
 
     /* ---- area name on entry is handled by the caller via Hud_Message */

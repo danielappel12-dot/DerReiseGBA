@@ -3,7 +3,7 @@
 #include "gba.h"
 
 #define MAX_PICKUPS 12
-enum { PU_AMMO, PU_OVERDRIVE, PU_DOUBLE, PU_RESTORE, PU_CLEAROUT, PU_COUNT };
+enum { PU_AMMO, PU_OVERDRIVE, PU_DOUBLE, PU_RESTORE, PU_NUKE, PU_INSTA, PU_COUNT };
 
 typedef struct {
     u8 active, type;

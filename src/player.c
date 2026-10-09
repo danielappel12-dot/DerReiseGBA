@@ -137,6 +137,7 @@ void Player_Update(void)
     if (p->empty_flash) p->empty_flash--;
     if (p->overdrive_t) p->overdrive_t--;
     if (p->double_t) p->double_t--;
+    if (p->insta_t) p->insta_t--;
     for (int i = 0; i < 4; i++) if (p->dmg_dir[i]) p->dmg_dir[i]--;
 
     /* ---- movement */

@@ -681,12 +681,27 @@ def fx16():
     c.rect(2, 4, 12, 9, C(bm, 12)); c.frame(2, 4, 12, 9, C(bm, 13)); c.rect(6, 5, 4, 7, C(bm, 10)); c.rect(4, 7, 8, 3, C(bm, 10))
     c.rect(6, 2, 4, 2, C(bm, 13))
     add('PU_RESTORE', finish(c, 1, bm))
-    # clearout: skull-in-burst
+    # nuke: radiation trefoil on a yellow disc
+    c = Canvas(16, 16)
+    c.ellipse(8, 8, 6.6, 6.6, C(bm, 4)); c.ellipse(8, 8, 5.6, 5.6, C(bm, 4))
+    for y in range(16):
+        for x in range(16):
+            dx, dy = x + 0.5 - 8, y + 0.5 - 8
+            d = math.hypot(dx, dy)
+            if 2.2 < d < 5.6:
+                ang = (math.degrees(math.atan2(dy, dx)) + 90) % 120
+                if ang < 60:
+                    c.px(x, y, C(bm, 15))
+            if d <= 1.6:
+                c.px(x, y, C(bm, 15))
+    add('PU_NUKE', finish(c, 1, bm))
+    # insta kill: red skull
     c = Canvas(16, 16)
     c.ellipse(8, 8, 6.6, 6.6, C(bm, 11)); c.ellipse(8, 8, 5.4, 5.4, C(bm, 10))
-    c.ellipse(8, 7, 3, 2.8, C(bm, 12)); c.rect(6, 9, 5, 3, C(bm, 12))
+    c.ellipse(8, 7, 3.2, 3.0, C(bm, 12)); c.rect(6, 9, 5, 3, C(bm, 12))
     c.rect(6, 6, 2, 2, C(bm, 15)); c.rect(9, 6, 2, 2, C(bm, 15)); c.px(8, 9, C(bm, 15))
-    add('PU_CLEAR', finish(c, 1, bm))
+    c.px(7, 11, C(bm, 15)); c.px(9, 11, C(bm, 15))
+    add('PU_INSTA', finish(c, 1, bm))
     # perk gems, one colour per perk (IRON HEART red, QUICK HANDS yellow, STEADY AIM cyan, SECOND WIND green, FIELD MEDIC orange)
     for nm, main, dark in (('IRON', 10, 11), ('QUICK', 4, 5), ('STEADY', 6, 7), ('SECOND', 8, 9), ('FIELD', 2, 3)):
         c = Canvas(16, 16)

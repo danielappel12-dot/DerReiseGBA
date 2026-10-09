@@ -200,6 +200,11 @@ static void update_play(void)
         }
     }
 #endif
+#ifdef BOT_PICKUPS
+    if (G.state_frame == 200) for (int i = 0; i < PU_COUNT; i++) Pickups_Spawn(i, (player.x >> 8) - 50 + i * 20, (player.y >> 8) - 30);
+    if (G.state_frame == 520) Pickups_Apply(PU_INSTA);
+    if (G.state_frame == 700) { Pickups_Apply(PU_NUKE); }
+#endif
     int running = (rounds.phase != RP_START);
     World_Update(running);
     if (player.state == PS_ALIVE) Rounds_Update();

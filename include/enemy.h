@@ -49,7 +49,7 @@ void Enemies_Update(void);
 int  Enemy_Damage(Enemy *e, int dmg, int crit, int melee, int hit_angle);
 void Enemies_KillAll(int award);
 int  Enemies_NearestTo(int px, int py, int max_dist, int need_los, int skip);
-void Enemies_Clearout(int dmg);
+void Enemies_Nuke(void);                 /* kills every zombie on the map, flat +400 points */
 int  Enemy_CenterY(const Enemy *e);
 int  Enemy_TeleportNearPlayer(Enemy *e, int rmin, int rmax);
 

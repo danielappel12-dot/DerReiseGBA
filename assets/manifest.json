@@ -201,7 +201,7 @@
    "fw": 16,
    "fh": 16,
    "cols": 8,
-   "count": 19,
+   "count": 20,
    "names": [
     "FX_MUZZLE_0",
     "FX_MUZZLE_1",
@@ -216,7 +216,8 @@
     "FX_PU_OVERDRIVE",
     "FX_PU_DOUBLE",
     "FX_PU_RESTORE",
-    "FX_PU_CLEAR",
+    "FX_PU_NUKE",
+    "FX_PU_INSTA",
     "FX_PERK_ICON_IRON",
     "FX_PERK_ICON_QUICK",
     "FX_PERK_ICON_STEADY",

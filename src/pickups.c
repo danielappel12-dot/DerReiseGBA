@@ -2,7 +2,7 @@
 
 Pickup pickups[MAX_PICKUPS] IWRAM_DATA;
 
-const char *const pickup_names[PU_COUNT] = { "AMMO CACHE", "OVERDRIVE", "DOUBLE SCORE", "FULL RESTORE", "CLEAROUT" };
+const char *const pickup_names[PU_COUNT] = { "AMMO CACHE", "OVERDRIVE", "2X POINTS", "FULL RESTORE", "NUKE", "INSTA KILL" };
 
 void Pickups_Init(void) { memset(pickups, 0, sizeof(pickups)); }
 
@@ -25,11 +25,9 @@ void Pickups_Spawn(int type, int px, int py)
 
 void Pickups_MaybeDrop(int px, int py)
 {
-    /* 6% per kill; weights favour ammo / restore */
-    if (RandRange(100) >= 6) return;
-    static const u8 table[10] = { PU_AMMO, PU_AMMO, PU_RESTORE, PU_RESTORE, PU_DOUBLE, PU_DOUBLE, PU_OVERDRIVE,
-                                  PU_OVERDRIVE, PU_CLEAROUT, PU_AMMO };
-    Pickups_Spawn(table[RandRange(10)], px, py);
+    /* 7 % per kill; every power-up is equally likely, so the ammo cache is just one of six random drops */
+    if (RandRange(100) >= 7) return;
+    Pickups_Spawn(RandRange(PU_COUNT), px, py);
 }
 
 void Pickups_Apply(int type)
@@ -39,11 +37,13 @@ void Pickups_Apply(int type)
     case PU_OVERDRIVE: player.overdrive_t = 600; break;
     case PU_DOUBLE:    player.double_t = 1200; break;
     case PU_RESTORE:   Player_Heal(player.maxhp); break;
-    case PU_CLEAROUT:
-        Enemies_Clearout(250);
-        Fx_Shake(14);
-        Fx_Flash(12);
+    case PU_NUKE:
+        Enemies_Nuke();
+        Audio_PlaySfx(SFX_EXPLOSION);
+        Fx_Shake(16);
+        Fx_Flash(14);
         break;
+    case PU_INSTA:     player.insta_t = 1200; break;
     }
     Audio_PlaySfx(SFX_POWERUP);
     Fx_Flash(6);
